@@ -2,19 +2,20 @@ var images = new Array();
 var myRotator = new imageRotator();
 var imageCount = 72;
 var imagesloaded = 0;
-for (var i = 0; i < imageCount; i++) {
 
+
+for (var i = 0; i < imageCount; i++) {
 	images[i] = new Image();
 	images[i].src = 'img/' + i + '.jpg';
-
 	images[i].onload = function() {
 		imagesloaded++;
 		if (imagesloaded == imageCount) {
 			console.log('ok');
 			allLoaded();
-		}
-	}
+		};
+	};
 };
+
 
 function allLoaded() {
 	myRotator.setFrames(images);
@@ -23,9 +24,10 @@ function allLoaded() {
 };
 
 
-window.onresize = function() {
+window.addEventListener("resize", function() {
 	getWindowSize();
-};
+});
+
 
 function getWindowSize() {
 	var x = window.innerWidth;
