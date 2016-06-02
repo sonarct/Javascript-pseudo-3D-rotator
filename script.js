@@ -11,8 +11,8 @@ function imageRotator(images) {
 	this.ctx = canvas.getContext("2d");
 	
 
-	this.setFrames(images);
-	//this.drawFrame(0);	
+	//this.setFrames(images);
+	//this.drawFrame(30);	
 };
 
 
@@ -22,35 +22,13 @@ imageRotator.prototype = {
 	//Подгрузить все картинки в браузер и по onload отдать их в работу.
 	setFrames: function(images) {
 		this.images = images;
-		this.frameSet = new Array();
-		//Проверка на onload
-		var imageCount = images.length;
-		var imagesloaded = 0;
-		for (var i = 0; i < imageCount; i++) {
-			//Присвоение массиву картинок
-			this.frameSet[i] = new Image();
-			this.frameSet[i].src = images[i];
-			//Сама проверка на подгрузку
-			this.frameSet[i].onload = function() {
-				imagesloaded++;
-				if (imagesloaded == imageCount) {
-					allLoaded();
-				}
-			}
-		};
-
-		var drawFrame = this.drawFrame;
-
-		function allLoaded() {
-				console.log('zbs');
-		}
 	},
 	
 	//Отрисовать нужный фрэйм по индексу.
 	drawFrame: function(index) {
 		this.index = index;
 		var ctx = this.ctx;
-		var frame = this.frameSet[index];
+		var frame = this.images[index];
 		frame.onload = function() {
 			ctx.drawImage(this,0,0);
 		};

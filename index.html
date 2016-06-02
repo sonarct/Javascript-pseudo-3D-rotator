@@ -9,9 +9,28 @@
 	<body>
 			<script type="text/javascript" src="script.js"></script>
 			<script type="text/javascript">
-				imgArray = [];
-				for (var i = 0; i < 72; i++) {imgArray.push('img/' + i + '.jpg')};
-				var myRotator = new imageRotator(imgArray);
+				//var myRotator = new imageRotator(images);
+				var images = new Array();
+				//Проверка на onload
+				var imageCount = 72;
+				var imagesloaded = 0;
+				for (var i = 0; i < imageCount; i++) {
+					//Присвоение массиву картинок
+					images[i] = new Image();
+					images[i].src = 'img/' + i + '.jpg';
+					//Сама проверка на подгрузку
+					images[i].onload = function() {
+						imagesloaded++;
+						if (imagesloaded == imageCount) {
+							console.log('zbs');
+							allLoaded();
+						}
+					}
+				};
+
+				function allLoaded() {
+					var myRotator = new imageRotator(images);
+				};
 			</script>
 	</body>
 </html>
