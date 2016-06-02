@@ -1,16 +1,17 @@
 <!doctype html>
 <html>
-    <head>
-        <title>Example</title>
-        <meta charset="utf-8" />
-        <link href="style.css" rel="stylesheet" type="style/css">
-        
-    </head>
-	<body onload="draw();">
-   		<canvas id="canvas" width="600" height="600"></canvas>
-   		<p id="frameNumber">Frame #0</p>
-   		<button id="prevFrame" name="prevFrame">previous frame</button>
-   		<button id="nextFrame" name="nextFrame">next frame</button>
-   		<script type="text/javascript" src="script.js"></script>
- 	</body>
+		<head>
+				<title>Example</title>
+				<meta charset="utf-8" />
+				<link href="style.css" rel="stylesheet" type="style/css">
+				
+		</head>
+	<body>
+			<script type="text/javascript" src="script.js"></script>
+			<script type="text/javascript">
+				imgArray = [];
+				for (var i = 0; i < 72; i++) {imgArray.push('img/' + i + '.jpg')};
+				var myRotator = new imageRotator(imgArray);
+			</script>
+	</body>
 </html>

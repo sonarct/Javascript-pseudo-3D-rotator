@@ -1,83 +1,45 @@
-var imgNumber = 0;
-var dragObject = {};
+function imageRotator(images) {
+	this.images = images;
+	var canvas = document.createElement('canvas');
+	document.body.appendChild(canvas);
 
 
-function draw() {
-	var ctx = document.getElementById('canvas').getContext('2d');
-	var img = new Image();
+	canvas.width = 600;
+	canvas.height = 600;
+	this.ctx = canvas.getContext("2d");
+	
 
-	img.onload = function() {
-		ctx.drawImage(img,0,0);
-	};
-	img.src = 'img/'+ imgNumber + '.jpg';
+	this.img = new Image();
+	this.drawFrame(0);
+	this.setFrames(images);
+	
 };
 
 
-function prevFrame() {
-	imgNumber++;
-	if (imgNumber > 71) {
-		imgNumber = 0;
-	};
-	showFrameNumber();
-	draw();
+function drawCanvas(width,height) {
+	var canvas = document.createElement('canvas');
 };
 
 
-function nextFrame() {
-	imgNumber--;
-	if (imgNumber < 0) {
-		imgNumber = 71;
-	};
-	showFrameNumber();
-	draw();
-};
 
+imageRotator.prototype = {
 
-function dragFrame() {
-	var myCanvas = document.getElementById('canvas');
+	drawFrame: function(index) {
+		this.index = index;
+		this.img.src = this.setFrames[index];
+		var ctx = this.ctx;
+		this.img.onload = function() {
+			ctx.drawImage(this,0,0);
+		}	
+	},
 
-	myCanvas.ondragstart = function() {
-		return false;
-	};
-
-	myCanvas.onmousedown = function(e) {
-
-		dragObject.downX = e.pageX;
-		var counter = 0;		
-
-		document.onmousemove = function(e) {
-						
-			var moveX = e.pageX - dragObject.downX;
-
-			if (counter > moveX) {
-				prevFrame();
-			} else if (counter < moveX) {
-				nextFrame();
-			};
-
-			counter = moveX;
+	setFrames: function(images) {
+		this.images = images;
+		var frameSet = [];
+		for (var i = 0; i < images.length; i++) {
+			frameSet.push(new Image().src=images[i]);
 		};
-
-		document.onmouseup = function() {
-			document.onmousemove = null;
-			myCanvas.onmouseup = null;
-		};
-	};
+		console.log(frameSet);
+	}
+	
 };
-
-
-function showFrameNumber() {
-	document.getElementById('frameNumber').innerHTML = 'Frame #' + imgNumber;
-};
-
-
-document.getElementById('nextFrame').onclick = function() {
-	nextFrame();
-};
-
-document.getElementById('prevFrame').onclick = function() {
-	prevFrame();
-};
-
-
-dragFrame();
