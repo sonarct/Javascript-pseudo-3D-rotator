@@ -1,6 +1,5 @@
 //Главная функция-конструктор. Принимает массив картинок.
-function imageRotator(images) {
-	this.images = images;
+function imageRotator() {
 	//Создаем канвас и добавляем его на странциу.
 	var canvas = document.createElement('canvas');
 	document.body.appendChild(canvas);
@@ -9,10 +8,7 @@ function imageRotator(images) {
 
 	//Задаем переменную для работы с канвасом в 2д.
 	this.ctx = canvas.getContext("2d");
-	
 
-	//this.setFrames(images);
-	//this.drawFrame(30);	
 };
 
 
@@ -22,16 +18,15 @@ imageRotator.prototype = {
 	//Подгрузить все картинки в браузер и по onload отдать их в работу.
 	setFrames: function(images) {
 		this.images = images;
+		console.log(images);
 	},
 	
 	//Отрисовать нужный фрэйм по индексу.
 	drawFrame: function(index) {
 		this.index = index;
-		var ctx = this.ctx;
 		var frame = this.images[index];
-		frame.onload = function() {
-			ctx.drawImage(this,0,0);
-		};
+		console.log(frame);
+		this.ctx.drawImage(frame,0,0);
 
 	},
 
