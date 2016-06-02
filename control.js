@@ -4,6 +4,9 @@ var imageCount = 72;
 var imagesloaded = 0;
 var number = 0;
 var dragObject = {};
+var toggle = 0;
+var counter = 0;
+var canvas = document.getElementById('canvas');
 
 
 for (var i = 0; i < imageCount; i++) {
@@ -23,13 +26,7 @@ function allLoaded() {
 	myRotator.setFrames(images);
 	myRotator.drawFrame(number);
 	getWindowSize();
-	dragFrame();
 };
-
-
-window.addEventListener("resize", function() {
-	getWindowSize();
-});
 
 
 function getWindowSize() {
@@ -40,38 +37,45 @@ function getWindowSize() {
 };
 
 
-function dragFrame() {
-	var myCanvas = document.getElementById('canvas');
-	myCanvas.ondragstart = function() {
-		return false;
-	};
-	myCanvas.onmousedown = function(e) {
-		dragObject.downX = e.pageX;
-		var counter = 0;		
-		document.onmousemove = function(e) {
-						
-			var moveX = e.pageX - dragObject.downX;
+window.addEventListener('resize', function() {
+	getWindowSize();
+});
 
-			if (counter > moveX) {
-				number++;
-				if (number > imageCount - 1) {
-					number = 0;
-				}
-				myRotator.drawFrame(number);
-			} else if (counter < moveX) {
-				number--;
-				if (number < 0) {
-					number = imageCount - 1;
-				}
-				myRotator.drawFrame(number);
-			};
 
-			counter = moveX;
+document.addEventListener('mousedown', function(e) {
+	toggle = 1;
+	dragObject.downX = e.clientX;
+});
+
+
+document.addEventListener('mousemove', function(e) {
+	var moveX = e.clientX - dragObject.downX;
+
+	if (toggle == 1) {
+
+		if (counter > moveX) {
+			number++;
+			if (number > imageCount - 1) {
+				number = 0;
+			}
+			myRotator.drawFrame(number);
+		} else if (counter < moveX) {
+			number--;
+			if (number < 0) {
+				number = imageCount - 1;
+			}
+			myRotator.drawFrame(number);
 		};
-
-		document.onmouseup = function() {
-			document.onmousemove = null;
-			myCanvas.onmouseup = null;
-		};
+		counter = moveX;
 	};
+});
+
+
+document.addEventListener('mouseup', function() {
+	toggle = 0;
+});
+
+
+canvas.ondragstart = function() {
+	return false;
 };
