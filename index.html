@@ -8,16 +8,15 @@
 	<body>
 		<script type="text/javascript" src="script.js"></script>
 		<script type="text/javascript">
-			//var myRotator = new imageRotator(images);
 			var images = new Array();
-			//Проверка на onload
+
 			var imageCount = 72;
 			var imagesloaded = 0;
 			for (var i = 0; i < imageCount; i++) {
-				//Присвоение массиву картинок
+
 				images[i] = new Image();
 				images[i].src = 'img/' + i + '.jpg';
-				//Сама проверка на подгрузку
+
 				images[i].onload = function() {
 					imagesloaded++;
 					if (imagesloaded == imageCount) {
@@ -31,7 +30,7 @@
 				var myRotator = new imageRotator();
 				myRotator.setFrames(images);
 				myRotator.drawFrame(0);
-				myRotator.resizeFrame(600,600);
+				// myRotator.resizeFrame(600,600);
 
 			};
 		</script>
