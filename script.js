@@ -9,11 +9,9 @@ function imageRotator(images) {
 	canvas.height = 600;
 	this.ctx = canvas.getContext("2d");
 	
-
-	this.img = new Image();
-	this.drawFrame(0);
 	this.setFrames(images);
-	
+	this.drawFrame(0);
+		
 };
 
 
@@ -24,25 +22,24 @@ function imageRotator(images) {
 
 
 imageRotator.prototype = {
+	//Подгрузить все картинки в браузер и по onload отдать их в работу
+	setFrames: function(images) {
+		this.images = images;
+		this.frameSet = new Array();
+		for (var i = 0; i < images.length; i++) {
+			this.frameSet[i] = new Image();
+			this.frameSet[i].src = images[i];
+		};
+		console.log(this.frameSet[5]);
+	},
+	
 	//Отрисовать нужный фрэйм по индексу
 	drawFrame: function(index) {
 		this.index = index;
-		this.img.src = this.setFrames[index];
 		var ctx = this.ctx;
-		this.img.onload = function() {
+		this.frameSet[index].onload = function() {
 			ctx.drawImage(this,0,0);
 		}	
 	},
 
-	//Подгрузить все картинки в браузер и по onload отдать их в работу
-	setFrames: function(images) {
-		this.images = images;
-		var frameSet = new Array();
-		for (var i = 0; i < images.length; i++) {
-			frameSet[i] = new Image();
-			frameSet[i].src = images[i];
-		};
-		console.log(frameSet[5]);
-	}
-	
 };
