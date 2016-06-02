@@ -9,7 +9,7 @@
 		<script type="text/javascript" src="script.js"></script>
 		<script type="text/javascript">
 			var images = new Array();
-
+			var myRotator = new imageRotator();
 			var imageCount = 72;
 			var imagesloaded = 0;
 			for (var i = 0; i < imageCount; i++) {
@@ -27,11 +27,21 @@
 			};
 
 			function allLoaded() {
-				var myRotator = new imageRotator();
 				myRotator.setFrames(images);
-				myRotator.drawFrame(0);
-				// myRotator.resizeFrame(600,600);
+				myRotator.drawFrame(44);
+				getWindowSize();
+			};
 
+			
+			window.onresize = function() {
+				getWindowSize();
+			};
+
+			function getWindowSize() {
+				var x = window.innerWidth;
+				var y = window.innerHeight;
+				var size = Math.min(x,y) * 0.8;
+				myRotator.resizeFrame(size,size);
 			};
 		</script>
 	</body>

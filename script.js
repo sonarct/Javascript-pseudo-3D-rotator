@@ -1,19 +1,6 @@
 function imageRotator() {
 	this.canvas = document.createElement('canvas');
 	document.body.appendChild(this.canvas);
-	
-
-	var clientWidth = document.getElementsByTagName('HTML')[0].clientWidth;
-	var clientHeight = document.getElementsByTagName('HTML')[0].clientHeight;
-
-	
-	this.width = Math.round(Math.min(clientHeight,clientWidth) * 0.9);
-	console.log(this.width);
-	this.height = this.width;
-	console.log(this.height);
-
-	this.canvas.width = this.width;
-	this.canvas.height = this.height;
 	this.ctx = this.canvas.getContext('2d');
 	this.canvas.id = 'canvas';
 };
