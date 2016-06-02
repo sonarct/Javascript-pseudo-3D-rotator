@@ -37,11 +37,12 @@ imageRotator.prototype = {
 	//Подгрузить все картинки в браузер и по onload отдать их в работу
 	setFrames: function(images) {
 		this.images = images;
-		var frameSet = [];
+		var frameSet = new Array();
 		for (var i = 0; i < images.length; i++) {
-			frameSet.push(new Image().src=images[i]);
+			frameSet[i] = new Image();
+			frameSet[i].src = images[i];
 		};
-		console.log(frameSet);
+		console.log(frameSet[5]);
 	}
 	
 };
