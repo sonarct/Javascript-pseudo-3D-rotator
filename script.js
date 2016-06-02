@@ -1,3 +1,4 @@
+//Главная функция-конструктор. Принимает массив картинок.
 function imageRotator(images) {
 	this.images = images;
 	var canvas = document.createElement('canvas');
@@ -16,14 +17,14 @@ function imageRotator(images) {
 };
 
 
-function drawCanvas(width,height) {
-	var canvas = document.createElement('canvas');
-};
+// function drawCanvas(width,height) {
+// 	var canvas = document.createElement('canvas');
+// };
 
 
 
 imageRotator.prototype = {
-
+	//Отрисовать нужный фрэйм по индексу
 	drawFrame: function(index) {
 		this.index = index;
 		this.img.src = this.setFrames[index];
@@ -33,6 +34,7 @@ imageRotator.prototype = {
 		}	
 	},
 
+	//Подгрузить все картинки в браузер и по onload отдать их в работу
 	setFrames: function(images) {
 		this.images = images;
 		var frameSet = [];
