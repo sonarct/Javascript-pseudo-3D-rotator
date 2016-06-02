@@ -52,8 +52,6 @@ function dragFrame() {
 						
 			var moveX = e.pageX - dragObject.downX;
 
-			console.log(number);
-
 			if (counter > moveX) {
 				number++;
 				if (number > imageCount - 1) {
