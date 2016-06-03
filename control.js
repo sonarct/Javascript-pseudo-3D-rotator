@@ -28,6 +28,7 @@ function allLoaded() {
 	myRotator.setFrames(images);
 	myRotator.drawFrame(number);
 	getWindowSize();
+	animate();
 };
 
 
@@ -48,7 +49,7 @@ function frameNumber() {
 	var number = Math.trunc(- 0.3 * tx % myRotator.images.length);
 	if (number < 0) number = myRotator.images.length - Math.abs(number);
 	return number;
-}
+};
 
 
 function moveAt() {
@@ -65,7 +66,6 @@ document.addEventListener('mousedown', function(e) {
 document.addEventListener('mousemove', function(e) {
 	if (toggle) {
 		tx = bx + e.clientX - x;
-		moveAt();
 	};
 });
 
@@ -75,3 +75,8 @@ document.addEventListener('mouseup', function(e) {
 	bx = tx;
 });
 
+
+function animate() {
+	moveAt();
+	requestAnimationFrame(animate);
+};
