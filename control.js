@@ -54,32 +54,35 @@ document.addEventListener('mouseup', function() {
 
 
 document.addEventListener('mousemove', function(e) {
-	var moveX = e.clientX - dragObject.downX;
 
 	if (toggle == 1) {
-
-		if (counter > moveX) {
-			number++;
-			if (number > imageCount - 1) {
-				number = 0;
-			}
-			myRotator.drawFrame(number);
-		} else if (counter < moveX) {
-			number--;
-			if (number < 0) {
-				number = imageCount - 1;
-			}
-			myRotator.drawFrame(number);
+		if (e.clientX < dragObject.downX) {
+			drawNextFrame();
+		} else if (e.clientX > dragObject.downX) {
+			drawPrevFrame();
 		};
-		counter = moveX;
 	};
+	dragObject.downX = e.clientX;
 });
+
+
+function drawNextFrame() {
+	number++;
+	if (number > imageCount - 1) number = 0;
+	myRotator.drawFrame(number);
+};
+
+
+function drawPrevFrame() {
+	number--;
+	if (number < 0) number = imageCount - 1;
+	myRotator.drawFrame(number);
+};
 
 
 canvas.ondragstart = function() {
 	return false;
 };
-
 
 
 
