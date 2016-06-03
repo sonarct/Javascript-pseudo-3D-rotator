@@ -48,6 +48,11 @@ document.addEventListener('mousedown', function(e) {
 });
 
 
+document.addEventListener('mouseup', function() {
+	toggle = 0;
+});
+
+
 document.addEventListener('mousemove', function(e) {
 	var moveX = e.clientX - dragObject.downX;
 
@@ -71,11 +76,39 @@ document.addEventListener('mousemove', function(e) {
 });
 
 
-document.addEventListener('mouseup', function() {
-	toggle = 0;
-});
-
-
 canvas.ondragstart = function() {
 	return false;
 };
+
+
+
+
+
+
+
+
+var ball = document.getElementById('ball');
+
+document.onmousedown = function(e) {
+	var x = e.pageX;
+	var y = e.pageY;
+	var tx = ball.offsetLeft;
+	var ty = ball.offsetTop;
+
+	ball.style.position = 'absolute';
+	document.body.appendChild(ball);
+	ball.style.zIndex = 1000; 
+
+	function moveAt(e) {
+		ball.style.left = tx + e.pageX - x + 'px';
+		ball.style.top = ty + e.pageY - y + 'px';
+	};
+
+	document.onmousemove = function(e) {
+		moveAt(e);
+	};
+
+	document.onmouseup = function() {
+		document.onmousemove = null;
+	};
+}
