@@ -17,7 +17,6 @@ for (var i = 0; i < imageCount; i++) {
 	images[i].onload = function() {
 		imagesloaded++;
 		if (imagesloaded == imageCount) {
-			console.log('ok');
 			allLoaded();
 		};
 	};
@@ -29,6 +28,7 @@ function allLoaded() {
 	myRotator.drawFrame(number);
 	getWindowSize();
 	animate();
+	work();
 };
 
 
@@ -46,8 +46,12 @@ window.addEventListener('resize', function() {
 
 
 function frameNumber() {
-	var number = Math.trunc(- 0.3 * tx % myRotator.images.length);
+	var number = Math.trunc(-0.3 * tx % myRotator.images.length);
 	if (number < 0) number = myRotator.images.length - Math.abs(number);
+	if (oldNumber != number) {
+		counter++;
+		oldNumber = number;
+	};
 	return number;
 };
 
@@ -71,8 +75,9 @@ document.addEventListener('mousemove', function(e) {
 
 
 document.addEventListener('mouseup', function(e) {
-	toggle = 0;
 	bx = tx;
+	toggle = 0;
+
 });
 
 
@@ -80,3 +85,14 @@ function animate() {
 	moveAt();
 	requestAnimationFrame(animate);
 };
+
+
+function work() {
+  	console.log(counter);
+  	counter = 0;
+	setTimeout(work, 1000);
+};
+
+
+var oldNumber = 0;
+var counter = 0;
