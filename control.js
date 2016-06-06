@@ -14,7 +14,8 @@ var bx = 0;
 var time = Date.now();
 var diffTime;
 var prevTime;
-var speed;
+var speed = 0;
+var i = 0;
 
 
 for (var i = 0; i < imageCount; i++) {
@@ -64,6 +65,7 @@ function moveAt() {
 
 
 document.addEventListener('mousedown', function(e) {
+	lastTx = tx;
 	x = e.clientX;
 	toggle = 1;
 });
@@ -88,6 +90,12 @@ function animate() {
 	prevTime = time;
 	time = Date.now();
 	diffTime = time - prevTime;
+	if (toggle == 0) {
+		tx = tx - 2 * speed;
+		console.log('tx ' + tx);
+		console.log('speed ' + speed);
+		console.log('txdiff ' + (lastTx - tx))
+	};
 	moveAt();
 	requestAnimationFrame(animate);
 };
@@ -95,7 +103,4 @@ function animate() {
 
 function slide() {
 	speed = (lastTx - tx) / diffTime;
-	console.log(speed);
 };
-
-
