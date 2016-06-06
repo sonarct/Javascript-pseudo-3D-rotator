@@ -8,7 +8,13 @@ var canvas = document.getElementById('canvas');
 //Coordinates
 var x = 0;
 var tx = 0;
+var lastTx = 0;
 var bx = 0;
+//Time
+var time = Date.now();
+var diffTime;
+var prevTime;
+var speed;
 
 
 for (var i = 0; i < imageCount; i++) {
@@ -28,7 +34,6 @@ function allLoaded() {
 	myRotator.drawFrame(number);
 	getWindowSize();
 	animate();
-	work();
 };
 
 
@@ -46,12 +51,9 @@ window.addEventListener('resize', function() {
 
 
 function frameNumber() {
-	var number = Math.trunc(-0.3 * tx % myRotator.images.length);
-	if (number < 0) number = myRotator.images.length - Math.abs(number);
-	if (oldNumber != number) {
-		counter++;
-		oldNumber = number;
-	};
+	var images = myRotator.images.length
+	number = Math.round(-0.3 * tx);
+	number = ((number % images) + images) % images;
 	return number;
 };
 
@@ -69,6 +71,7 @@ document.addEventListener('mousedown', function(e) {
 
 document.addEventListener('mousemove', function(e) {
 	if (toggle) {
+		lastTx = tx;
 		tx = bx + e.clientX - x;
 	};
 });
@@ -77,22 +80,22 @@ document.addEventListener('mousemove', function(e) {
 document.addEventListener('mouseup', function(e) {
 	bx = tx;
 	toggle = 0;
-
+	slide();
 });
 
 
 function animate() {
+	prevTime = time;
+	time = Date.now();
+	diffTime = time - prevTime;
 	moveAt();
 	requestAnimationFrame(animate);
 };
 
 
-function work() {
-  	console.log(counter);
-  	counter = 0;
-	setTimeout(work, 1000);
+function slide() {
+	speed = (lastTx - tx) / diffTime;
+	console.log(speed);
 };
 
 
-var oldNumber = 0;
-var counter = 0;
