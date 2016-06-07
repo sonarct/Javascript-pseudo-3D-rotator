@@ -1,6 +1,6 @@
 var images = new Array(),
 	myRotator = new imageRotator(),
-	imageCount = 72,
+	imagesLength = 72,
 	imagesloaded = 0,
 	number = 0,
 	toggle = 0,
@@ -16,8 +16,8 @@ var time = Date.now(),
 	prevTime,
 	speed = 0;
 //Factors
-var factorRotation = -0.3,
-	factorFriction = 0.97,
+var factorRotation = -0.2,
+	factorFriction = 0.96,
 	factorSpeed = 3,
 	factorResize = 0.8;
 
@@ -40,7 +40,7 @@ function animate() {
 	time = Date.now();
 	diffTime = time - prevTime;
 
-	if (!toggle) {
+	if (Math.abs(speed) > 0.01) {
 		tx = tx - factorSpeed * speed;
 		speed = speed * factorFriction;
 		bx = tx;
@@ -52,20 +52,18 @@ function animate() {
 
 //Generates index of array according to mouse coordinates
 function frameNumber() {
-	var images = myRotator.images.length
 	number = Math.round(factorRotation * tx);
-	number = ((number % images) + images) % images;
 	return number;
 };
 
 
 function getImagesArray() {
-	for (var i = 0; i < imageCount; i++) {
+	for (var i = 0; i < imagesLength; i++) {
 		images[i] = new Image();
 		images[i].src = 'img/' + i + '.jpg';
 		images[i].onload = function() {
 			imagesloaded++;
-			if (imagesloaded == imageCount) {
+			if (imagesloaded == imagesLength) {
 				allLoaded();
 			};
 		};
@@ -90,6 +88,7 @@ window.addEventListener('resize', function() {
 document.addEventListener('mousedown', function(e) {
 	lastTx = tx;
 	x = e.clientX;
+	speed = 0;
 	toggle = 1;
 });
 

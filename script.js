@@ -13,7 +13,9 @@ imageRotator.prototype = {
 	
 	drawFrame: function(index) {
 		this.index = index;
-		var frame = this.images[index];
+		var imagesLength = this.images.length;
+		this.index = ((this.index % imagesLength) + imagesLength) % imagesLength;
+		var frame = this.images[this.index];
 		this.ctx.drawImage(frame,0,0,this.width,this.height);
 	},
 
