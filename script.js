@@ -15,7 +15,7 @@ imageRotator.prototype = {
 		if (!index) {index = 0};
 		this.indexNext = Math.ceil(index);
 		this.indexPrev = Math.floor(index);
-		this.opacity = Math.abs(index - this.indexPrev);
+		this.opacity = highMath(Math.abs(index - this.indexPrev));
 
 		var imagesLength = this.images.length;
 
@@ -23,6 +23,8 @@ imageRotator.prototype = {
 			index_ = ((index_ % imagesLength) + imagesLength) % imagesLength;
 			return index_;
 		};
+
+		function highMath(t) { return (t*=2) < 1 ? t*t*t/2 : ((t-=2)*t*t+2)/2 };
 
 		var frameNext = this.images[calculateIndex(this.indexNext)];
 		var framePrev = this.images[calculateIndex(this.indexPrev)];
