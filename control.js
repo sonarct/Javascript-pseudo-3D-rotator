@@ -15,16 +15,26 @@ var time = Date.now();
 var diffTime;
 var prevTime;
 var speed = 0;
-var i = 0;
+//Factors
+var factorRotation = -0.3;
+var factorFriction = 0.97;
+var factorSpeed = 3;
+var factorResize = 0.8;
 
 
-for (var i = 0; i < imageCount; i++) {
-	images[i] = new Image();
-	images[i].src = 'img/' + i + '.jpg';
-	images[i].onload = function() {
-		imagesloaded++;
-		if (imagesloaded == imageCount) {
-			allLoaded();
+//Initialize work of script
+getImagesArray();
+
+
+function getImagesArray() {
+	for (var i = 0; i < imageCount; i++) {
+		images[i] = new Image();
+		images[i].src = 'img/' + i + '.jpg';
+		images[i].onload = function() {
+			imagesloaded++;
+			if (imagesloaded == imageCount) {
+				allLoaded();
+			};
 		};
 	};
 };
@@ -38,30 +48,41 @@ function allLoaded() {
 };
 
 
-function getWindowSize() {
-	var x = window.innerWidth;
-	var y = window.innerHeight;
-	var size = Math.min(x,y) * 0.8;
-	myRotator.resizeFrame(size,size);
+function animate() {
+	prevTime = time;
+	time = Date.now();
+	diffTime = time - prevTime;
+	if (!toggle) {
+		tx = tx - factorSpeed * speed;
+		speed = speed * factorFriction;
+		bx = tx;
+	};
+	myRotator.drawFrame(frameNumber());
+	requestAnimationFrame(animate);
 };
 
 
-window.addEventListener('resize', function() {
-	getWindowSize();
-});
-
-
+//Generates index of array according to mouse coordinates
 function frameNumber() {
 	var images = myRotator.images.length
-	number = Math.round(-0.3 * tx);
+	number = Math.round(factorRotation * tx);
 	number = ((number % images) + images) % images;
 	return number;
 };
 
 
-function moveAt() {
-	myRotator.drawFrame(frameNumber());
+function getWindowSize() {
+	var x = window.innerWidth;
+	var y = window.innerHeight;
+	var size = Math.min(x,y) * factorResize;
+	myRotator.resizeFrame(size,size);
 };
+
+
+//Events
+window.addEventListener('resize', function() {
+	getWindowSize();
+});
 
 
 document.addEventListener('mousedown', function(e) {
@@ -82,25 +103,5 @@ document.addEventListener('mousemove', function(e) {
 document.addEventListener('mouseup', function(e) {
 	bx = tx;
 	toggle = 0;
-	slide();
-});
-
-
-function animate() {
-	prevTime = time;
-	time = Date.now();
-	diffTime = time - prevTime;
-	if (toggle == 0) {
-		tx = tx - 2 * speed;
-		console.log('tx ' + tx);
-		console.log('speed ' + speed);
-		console.log('txdiff ' + (lastTx - tx))
-	};
-	moveAt();
-	requestAnimationFrame(animate);
-};
-
-
-function slide() {
 	speed = (lastTx - tx) / diffTime;
-};
+});
