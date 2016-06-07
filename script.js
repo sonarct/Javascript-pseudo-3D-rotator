@@ -12,11 +12,13 @@ imageRotator.prototype = {
 	},
 	
 	drawFrame: function(index) {
-		this.index = index;
+		this.index = Math.round(index);
 		var imagesLength = this.images.length;
 		this.index = ((this.index % imagesLength) + imagesLength) % imagesLength;
 		var frame = this.images[this.index];
-		this.ctx.drawImage(frame,0,0,this.width,this.height);
+		this.ctx.globalAlpha = 0.5;
+		this.ctx.clearRect(0, 0, this.width, this.height)
+		this.ctx.drawImage(frame, 0, 0, this.width, this.height);
 	},
 
 	resizeFrame: function(width, height) {

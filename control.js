@@ -45,8 +45,8 @@ function animate() {
 		speed = speed * factorFriction;
 		bx = tx;
 	};
-
-	myRotator.drawFrame(Math.round(factorRotation * tx));
+	var index = factorRotation * tx;
+	myRotator.drawFrame(index);
 	requestAnimationFrame(animate);
 };
 
