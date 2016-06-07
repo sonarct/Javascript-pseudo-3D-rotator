@@ -18,7 +18,7 @@ var time = Date.now(),
 //Factors
 var speed = -0.3,
 	factorFriction = 0.96,
-	factormomentum = 3,
+	factorMomentum = 3,
 	factorResize = 0.8;
 //Buttons
 var buttonRight = document.getElementById('rotateRight');
@@ -47,8 +47,8 @@ function animate() {
 	time = Date.now();
 	diffTime = time - prevTime;
 
-	if (Math.abs(momentum) > 0.01) {
-		tx = tx - factormomentum * momentum;
+	if (Math.abs(momentum) > 0.3) {
+		tx = tx - factorMomentum * momentum;
 		momentum = momentum * factorFriction;
 		bx = tx;
 	};

@@ -27,7 +27,9 @@ imageRotator.prototype = {
 		function highMath(t) { return (t*=2) <1 ? t*t/2 : -(--t*(t-2)-1)/2 };
 
 		var frameNext = this.images[calculateIndex(this.indexNext)];
+		//console.log(calculateIndex(this.indexNext));
 		var framePrev = this.images[calculateIndex(this.indexPrev)];
+		//console.log(calculateIndex(this.indexPrev));
 
 		this.ctx.clearRect(0, 0, this.width, this.height);
 		
