@@ -46,14 +46,8 @@ function animate() {
 		bx = tx;
 	};
 
-	myRotator.drawFrame(frameNumber());
+	myRotator.drawFrame(Math.round(factorRotation * tx));
 	requestAnimationFrame(animate);
-};
-
-//Generates index of array according to mouse coordinates
-function frameNumber() {
-	number = Math.round(factorRotation * tx);
-	return number;
 };
 
 
