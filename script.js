@@ -5,6 +5,7 @@ function imageRotator() {
 	this.canvas.id = 'canvas';
 };
 
+var z = 0;
 
 imageRotator.prototype = {
 	setFrames: function(images) {
@@ -12,13 +13,28 @@ imageRotator.prototype = {
 	},
 	
 	drawFrame: function(index) {
-		this.index = Math.round(index);
+		if (!index) {index = 0};
+		this.indexNext = Math.ceil(index);
+		this.indexPrev = Math.floor(index);
+		
+		this.opacity = Math.abs(index - this.indexPrev);
+
 		var imagesLength = this.images.length;
-		this.index = ((this.index % imagesLength) + imagesLength) % imagesLength;
-		var frame = this.images[this.index];
-		this.ctx.globalAlpha = 0.5;
-		this.ctx.clearRect(0, 0, this.width, this.height)
-		this.ctx.drawImage(frame, 0, 0, this.width, this.height);
+
+		this.indexNext = ((this.indexNext % imagesLength) + imagesLength) % imagesLength;
+		this.indexPrev = ((this.indexPrev % imagesLength) + imagesLength) % imagesLength;
+
+		var frameNext = this.images[this.indexNext];
+		var framePrev = this.images[this.indexPrev];
+
+		this.ctx.clearRect(0, 0, this.width, this.height);
+		
+		this.ctx.globalAlpha = 1;
+		this.ctx.drawImage(framePrev, 0, 0, this.width, this.height);
+		
+		this.ctx.globalAlpha = this.opacity;
+		this.ctx.drawImage(frameNext, 0, 0, this.width, this.height);
+
 	},
 
 	resizeFrame: function(width, height) {

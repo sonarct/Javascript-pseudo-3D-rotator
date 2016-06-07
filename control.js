@@ -14,11 +14,11 @@ var x = 0,
 var time = Date.now(),
 	diffTime,
 	prevTime,
-	speed = 0;
+	momentum = 0;
 //Factors
-var factorRotation = -0.2,
+var speed = -0.3,
 	factorFriction = 0.96,
-	factorSpeed = 3,
+	factormomentum = 3,
 	factorResize = 0.8;
 
 
@@ -40,12 +40,12 @@ function animate() {
 	time = Date.now();
 	diffTime = time - prevTime;
 
-	if (Math.abs(speed) > 0.01) {
-		tx = tx - factorSpeed * speed;
-		speed = speed * factorFriction;
+	if (Math.abs(momentum) > 0.01) {
+		tx = tx - factormomentum * momentum;
+		momentum = momentum * factorFriction;
 		bx = tx;
 	};
-	var index = factorRotation * tx;
+	var index = speed * tx;
 	myRotator.drawFrame(index);
 	requestAnimationFrame(animate);
 };
@@ -82,7 +82,7 @@ window.addEventListener('resize', function() {
 document.addEventListener('mousedown', function(e) {
 	lastTx = tx;
 	x = e.clientX;
-	speed = 0;
+	momentum = 0;
 	toggle = 1;
 });
 
@@ -98,5 +98,5 @@ document.addEventListener('mousemove', function(e) {
 document.addEventListener('mouseup', function(e) {
 	bx = tx;
 	toggle = 0;
-	speed = (lastTx - tx) / diffTime;
+	momentum = (lastTx - tx) / diffTime;
 });
