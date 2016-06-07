@@ -11,3 +11,19 @@
 	left: 0;
 	margin: auto;
 }
+
+#rotateLeft {
+	position: absolute;
+	top: 1;
+	right: 1;
+	bottom: 1;
+	left: 0;
+}
+
+#rotateRight {
+	position: absolute;
+	top: 1;
+	right: 0;
+	bottom: 1;
+	left: 1;
+}

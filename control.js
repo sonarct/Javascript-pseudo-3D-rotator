@@ -20,6 +20,13 @@ var speed = -0.3,
 	factorFriction = 0.96,
 	factormomentum = 3,
 	factorResize = 0.8;
+//Buttons
+var buttonRight = document.getElementById('rotateRight');
+var buttonLeft = document.getElementById('rotateLeft');
+var right = 0;
+var left = 0;
+var count = 0;
+var framesCount = 30;
 
 
 //Initialize work of script
@@ -47,6 +54,8 @@ function animate() {
 	};
 	var index = speed * tx;
 	myRotator.drawFrame(index);
+	manualRotate();
+
 	requestAnimationFrame(animate);
 };
 
@@ -70,6 +79,24 @@ function getWindowSize() {
 	var y = window.innerHeight;
 	var size = Math.min(x,y) * factorResize;
 	myRotator.resizeFrame(size,size);
+};
+
+
+function manualRotate() {
+	if (right && count < framesCount) {
+		tx++;
+		count++;
+	};
+
+	if (left && count < framesCount) {
+		tx--;
+		count++;
+	};
+
+	if (count >= framesCount) {
+		left = 0;
+		right = 0;
+	};
 };
 
 
@@ -99,4 +126,16 @@ document.addEventListener('mouseup', function(e) {
 	bx = tx;
 	toggle = 0;
 	momentum = (lastTx - tx) / diffTime;
+});
+
+
+buttonRight.addEventListener('click', function() {
+	count = 0;
+	right = 1;
+});
+
+
+buttonLeft.addEventListener('click', function() {
+	count = 0;
+	left = 1;
 });
