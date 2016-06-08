@@ -27,6 +27,11 @@ var buttonRight = document.getElementById('rotateRight'),
 	left = 0,
 	count = 0,
 	framesCount = 30;
+//For calculating speed in 10 frames and smooth moving
+var txArray = new Array(),
+	timeArray = new Array(),
+	sumTx = 0,
+	sumTime = 0;
 
 
 //Initialize work of script
@@ -46,6 +51,8 @@ function animate() {
 	time = Date.now();
 	diffTime = time - prevTime;
 	prevTime = time;
+	getSumTimeTx();
+
 	lastTx = tx;
 
 	if (Math.abs(momentum) > 0.01) {
@@ -53,9 +60,12 @@ function animate() {
 		momentum = momentum * factorFriction;
 		bx = tx;
 	};
+
 	var index = speed * tx;
+
 	myRotator.drawFrame(index);
 	manualRotate();
+	
 	requestAnimationFrame(animate);
 };
 
@@ -100,6 +110,20 @@ function manualRotate() {
 };
 
 
+function getSumTimeTx() {
+	sumTime = 0;
+	sumTx = 0;
+	if (timeArray.length > 10) {timeArray.shift()};
+	if (txArray.length > 10) {txArray.shift()};
+	timeArray.push(diffTime);
+	txArray.push(lastTx - tx);
+	for (var i = 0; i < 9; i++) {
+		sumTime = sumTime + timeArray[i];
+		sumTx = sumTx + txArray[i];
+	};
+};
+
+
 //Events
 window.addEventListener('resize', function() {
 	getWindowSize();
@@ -121,7 +145,7 @@ document.addEventListener('mousemove', function(e) {
 
 
 document.addEventListener('mouseup', function(e) {
-	momentum = (lastTx - tx) / diffTime;
+	momentum = sumTx / sumTime;
 	bx = tx;
 	toggle = 0;
 });
