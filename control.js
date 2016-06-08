@@ -2,19 +2,14 @@ var images = new Array(),
 	myRotator = new imageRotator(),
 	imagesLength = 72,
 	imagesloaded = 0,
-	number = 0,
 	toggle = 0,
 	canvas = document.getElementById('canvas');
 //Coordinates
 var x = 0,
 	tx = 0,
-	lastTx = 0,
 	bx = 0;
 //Time
-var time = Date.now(),
-	diffTime,
-	prevTime,
-	momentum = 0;
+var momentum = 0;
 //Factors
 var speed = -0.3,
 	factorFriction = 0.96,
@@ -31,7 +26,8 @@ var buttonRight = document.getElementById('rotateRight'),
 var txArray = new Array(),
 	timeArray = new Array(),
 	sumTx = 0,
-	sumTime = 0;
+	sumTime = 0,
+	framesHistory = 10;
 
 
 //Initialize work of script
@@ -48,12 +44,7 @@ function allLoaded() {
 
 //4 step
 function animate() {
-	time = Date.now();
-	diffTime = time - prevTime;
-	prevTime = time;
 	getSumTimeTx();
-
-	lastTx = tx;
 
 	if (Math.abs(momentum) > 0.01) {
 		tx = tx - factorMomentum * momentum;
@@ -113,14 +104,12 @@ function manualRotate() {
 function getSumTimeTx() {
 	sumTime = 0;
 	sumTx = 0;
-	if (timeArray.length > 10) {timeArray.shift()};
-	if (txArray.length > 10) {txArray.shift()};
-	timeArray.push(diffTime);
-	txArray.push(lastTx - tx);
-	for (var i = 0; i < 9; i++) {
-		sumTime = sumTime + timeArray[i];
-		sumTx = sumTx + txArray[i];
-	};
+	if (timeArray.length > framesHistory) {timeArray.shift()};
+	if (txArray.length > framesHistory) {txArray.shift()};
+	timeArray.push(Date.now());
+	txArray.push(tx);
+	sumTime = timeArray[framesHistory - 1] - timeArray[0];
+	sumTx = txArray[0] - txArray[framesHistory - 1];
 };
 
 
