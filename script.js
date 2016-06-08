@@ -12,6 +12,7 @@ imageRotator.prototype = {
 	},
 	
 	drawFrame: function(index) {
+
 		if (!index) { index = 0 };
 		this.indexNext = Math.ceil(index);
 		this.indexPrev = Math.floor(index);
@@ -27,15 +28,11 @@ imageRotator.prototype = {
 		function highMath(t) { return (t*=2) <1 ? t*t/2 : -(--t*(t-2)-1)/2 };
 
 		var frameNext = this.images[calculateIndex(this.indexNext)];
-		//console.log(calculateIndex(this.indexNext));
 		var framePrev = this.images[calculateIndex(this.indexPrev)];
-		//console.log(calculateIndex(this.indexPrev));
 
 		this.ctx.clearRect(0, 0, this.width, this.height);
-		
 		this.ctx.globalAlpha = 1;
 		this.ctx.drawImage(framePrev, 0, 0, this.width, this.height);
-		
 		this.ctx.globalAlpha = this.opacity;
 		this.ctx.drawImage(frameNext, 0, 0, this.width, this.height);
 	},
@@ -48,3 +45,4 @@ imageRotator.prototype = {
 		this.drawFrame(this.index);
 	}
 };
+

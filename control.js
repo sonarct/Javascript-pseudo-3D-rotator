@@ -21,12 +21,12 @@ var speed = -0.3,
 	factorMomentum = 3,
 	factorResize = 0.8;
 //Buttons
-var buttonRight = document.getElementById('rotateRight');
-var buttonLeft = document.getElementById('rotateLeft');
-var right = 0;
-var left = 0;
-var count = 0;
-var framesCount = 30;
+var buttonRight = document.getElementById('rotateRight'),
+	buttonLeft = document.getElementById('rotateLeft'),
+	right = 0,
+	left = 0,
+	count = 0,
+	framesCount = 30;
 
 
 //Initialize work of script
@@ -34,20 +34,21 @@ getImagesArray();
 
 
 //Functions
+//2 step
 function allLoaded() {
 	myRotator.setFrames(images);
-	myRotator.drawFrame(number);
 	getWindowSize();
 	animate();
 };
 
-
+//4 step
 function animate() {
-	prevTime = time;
 	time = Date.now();
 	diffTime = time - prevTime;
+	prevTime = time;
+	lastTx = tx;
 
-	if (Math.abs(momentum) > 0.3) {
+	if (Math.abs(momentum) > 0.01) {
 		tx = tx - factorMomentum * momentum;
 		momentum = momentum * factorFriction;
 		bx = tx;
@@ -55,11 +56,10 @@ function animate() {
 	var index = speed * tx;
 	myRotator.drawFrame(index);
 	manualRotate();
-
 	requestAnimationFrame(animate);
 };
 
-
+//1 step
 function getImagesArray() {
 	for (var i = 0; i < imagesLength; i++) {
 		images[i] = new Image();
@@ -73,7 +73,7 @@ function getImagesArray() {
 	};
 };
 
-
+//3 step
 function getWindowSize() {
 	var x = window.innerWidth;
 	var y = window.innerHeight;
@@ -107,7 +107,6 @@ window.addEventListener('resize', function() {
 
 
 document.addEventListener('mousedown', function(e) {
-	lastTx = tx;
 	x = e.clientX;
 	momentum = 0;
 	toggle = 1;
@@ -116,16 +115,15 @@ document.addEventListener('mousedown', function(e) {
 
 document.addEventListener('mousemove', function(e) {
 	if (toggle) {
-		lastTx = tx;
 		tx = bx + e.clientX - x;
 	};
 });
 
 
 document.addEventListener('mouseup', function(e) {
+	momentum = (lastTx - tx) / diffTime;
 	bx = tx;
 	toggle = 0;
-	momentum = (lastTx - tx) / diffTime;
 });
 
 
