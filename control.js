@@ -1,5 +1,5 @@
 var images = new Array(),
-	myRotator = new imageRotator(),
+	myRotator = new ImageRotator(),
 	imagesLength = 72,
 	imagesloaded = 0,
 	toggle = 0,
@@ -21,7 +21,8 @@ var buttonRight = document.getElementById('rotateRight'),
 	right = 0,
 	left = 0,
 	count = 0,
-	framesCount = 30;
+	framesCount = 30,
+	step = 1/4;
 //For calculating speed in 10 frames and smooth moving
 var txArray = new Array(),
 	timeArray = new Array(),
@@ -84,17 +85,18 @@ function getWindowSize() {
 
 
 function manualRotate() {
-	if (right && count < framesCount) {
+	var borderFrame = step * imagesLength / -speed;
+	if (right && count < borderFrame) {
 		tx++;
 		count++;
 	};
 
-	if (left && count < framesCount) {
+	if (left && count < borderFrame) {
 		tx--;
 		count++;
 	};
 
-	if (count >= framesCount) {
+	if (count >= borderFrame) {
 		left = 0;
 		right = 0;
 	};

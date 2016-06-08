@@ -1,4 +1,4 @@
-function imageRotator() {
+function ImageRotator() {
 	this.canvas = document.createElement('canvas');
 	document.body.appendChild(this.canvas);
 	this.ctx = this.canvas.getContext('2d');
@@ -6,7 +6,7 @@ function imageRotator() {
 };
 
 
-imageRotator.prototype = {
+ImageRotator.prototype = {
 	setFrames: function(images) {
 		this.images = images;
 	},
@@ -45,4 +45,3 @@ imageRotator.prototype = {
 		this.drawFrame(this.index);
 	}
 };
-
