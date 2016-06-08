@@ -18,17 +18,17 @@ var speed = -0.3,
 //Buttons
 var buttonRight = document.getElementById('rotateRight'),
 	buttonLeft = document.getElementById('rotateLeft'),
-	right = 0,
-	left = 0,
-	count = 0,
-	framesCount = 30,
-	step = 1/4;
+	manualTime = 1000,
+	time = 0,
+	manualPath = 60,
+	manualToggle = 0;
 //For calculating speed in 10 frames and smooth moving
 var txArray = new Array(),
 	timeArray = new Array(),
 	sumTx = 0,
 	sumTime = 0,
 	framesHistory = 10;
+
 
 
 //Initialize work of script
@@ -45,6 +45,7 @@ function allLoaded() {
 
 //4 step
 function animate() {
+
 	getSumTimeTx();
 
 	if (Math.abs(momentum) > 0.01) {
@@ -57,9 +58,12 @@ function animate() {
 
 	myRotator.drawFrame(index);
 	manualRotate();
-	
+
 	requestAnimationFrame(animate);
 };
+
+
+function easing(k) { return --k * k * k + 1 };
 
 //1 step
 function getImagesArray() {
@@ -85,20 +89,14 @@ function getWindowSize() {
 
 
 function manualRotate() {
-	var borderFrame = step * imagesLength / -speed;
-	if (right && count < borderFrame) {
-		tx++;
-		count++;
-	};
-
-	if (left && count < borderFrame) {
-		tx--;
-		count++;
-	};
-
-	if (count >= borderFrame) {
-		left = 0;
-		right = 0;
+	if (manualToggle) {
+		if (Date.now() - time <= manualTime) {
+			var temp = (Date.now() - time) / manualTime;
+			tx = bx + direction * manualPath * easing(temp);
+		} else {
+			manualToggle = 0;
+			bx = tx;
+		}
 	};
 };
 
@@ -141,14 +139,16 @@ document.addEventListener('mouseup', function(e) {
 	toggle = 0;
 });
 
-
+//buttons
 buttonRight.addEventListener('click', function() {
-	count = 0;
-	right = 1;
+	manualToggle = 1;
+	direction = 1;
+	time = Date.now();
 });
 
 
 buttonLeft.addEventListener('click', function() {
-	count = 0;
-	left = 1;
+	manualToggle = 1;
+	direction = -1;
+	time = Date.now();
 });
