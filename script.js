@@ -12,10 +12,13 @@ ImageRotator.prototype = {
 	},
 	
 	drawFrame: function(index) {
-
 		if (!index) { index = 0 };
+
+		
 		this.indexNext = Math.ceil(index);
 		this.indexPrev = Math.floor(index);
+
+
 		this.opacity = highMath(Math.abs(index - this.indexPrev));
 
 		var imagesLength = this.images.length;
@@ -36,8 +39,10 @@ ImageRotator.prototype = {
 		this.ctx.globalAlpha = this.opacity;
 		this.ctx.drawImage(frameNext, 0, 0, this.width, this.height);
 
-		divFrameNumber.innerHTML = calculateIndex(this.indexPrev) + '<br>' + 
-		calculateIndex(this.indexNext) + '<br>' + manualToggle;
+		divFrameNumber.innerHTML = 'prev ' + calculateIndex(this.indexPrev) + 
+		'<br>' + 'next ' + calculateIndex(this.indexNext) + '<br>' + 
+		manualToggle + '<br>' + momentum + '<br>' + '<br>' + this.indexPrev + 
+		'<br>' + this.indexNext + '<br>' + index;
 	},
 
 	resizeFrame: function(width, height) {
