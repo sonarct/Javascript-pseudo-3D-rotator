@@ -35,3 +35,12 @@ body {
     -ms-user-select: none;
     user-select: none;
 }
+
+#frameNumber {
+	position: absolute;
+	top: 100px;
+	width: 50px;
+	height: 50px;
+	background-color: pink;
+	color: blue;
+}

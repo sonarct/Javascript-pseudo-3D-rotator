@@ -28,6 +28,7 @@ var txArray = new Array(),
 	sumTx = 0,
 	sumTime = 0,
 	framesHistory = 10;
+var divFrameNumber = document.getElementById('frameNumber');
 
 
 
@@ -47,18 +48,16 @@ function allLoaded() {
 function animate() {
 
 	getSumTimeTx();
+	manualRotate();
 
 	if (Math.abs(momentum) > 0.01) {
 		tx = tx - factorMomentum * momentum;
 		momentum = momentum * factorFriction;
 		bx = tx;
 	};
-
 	var index = speed * tx;
 
 	myRotator.drawFrame(index);
-	manualRotate();
-
 	requestAnimationFrame(animate);
 };
 
@@ -89,14 +88,14 @@ function getWindowSize() {
 
 
 function manualRotate() {
-	if (manualToggle) {
+	if (manualToggle == 1) {
 		if (Date.now() - time <= manualTime) {
 			var temp = (Date.now() - time) / manualTime;
 			tx = bx + direction * manualPath * easing(temp);
 		} else {
 			manualToggle = 0;
 			bx = tx;
-		}
+		};
 	};
 };
 
@@ -120,6 +119,9 @@ window.addEventListener('resize', function() {
 
 
 document.addEventListener('mousedown', function(e) {
+	if (manualToggle == 1) {
+		return;
+	};
 	x = e.clientX;
 	momentum = 0;
 	toggle = 1;
@@ -134,6 +136,9 @@ document.addEventListener('mousemove', function(e) {
 
 
 document.addEventListener('mouseup', function(e) {
+	if (manualToggle == 1) {
+		return;
+	};
 	momentum = sumTx / sumTime;
 	bx = tx;
 	toggle = 0;
@@ -141,14 +146,18 @@ document.addEventListener('mouseup', function(e) {
 
 //buttons
 buttonRight.addEventListener('click', function() {
-	manualToggle = 1;
-	direction = 1;
-	time = Date.now();
+	if (!manualToggle) {
+		manualToggle = 1;
+		direction = 1;
+		time = Date.now();
+	};
 });
 
 
 buttonLeft.addEventListener('click', function() {
-	manualToggle = 1;
-	direction = -1;
-	time = Date.now();
+	if (!manualToggle) {
+		manualToggle = 1;
+		direction = -1;
+		time = Date.now();
+	};
 });
