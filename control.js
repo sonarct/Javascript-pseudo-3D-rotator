@@ -45,7 +45,7 @@ function getRightSpeed() {
 	ttx = bx + /* msForEnd * */momentum / (1 - frictionPerFrame);
 	console.log('msfe', msForEnd);
 
-	ttx = Math.round(ttx * speed) / speed;
+	ttx = Math.round(ttx * speed /10) / speed *10;
 	console.log('ttx', ttx * speed);
 
 	friction = 1 - /* msForEnd * */momentum / (ttx - bx);
@@ -75,9 +75,12 @@ function animate() {
 	if (momentum) {
 		if (Math.abs(momentum) > minMomentum) {
 			tempor += dt;
-			tx = tx + dt * momentum;
-			bx = tx;
+			for(var i = 0; i < dt; i++) {
+				tx += momentum * Math.pow(friction, i)
+			}
 			momentum = momentum * Math.pow(friction, dt);
+			// tx = tx + dt * momentum;
+			bx = tx;
 		} else {
 			momentum = 0;
 			console.log(tempor);
