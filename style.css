@@ -37,6 +37,7 @@ body {
 }
 
 #frameNumber {
+/*	display: none;*/
 	position: absolute;
 	top: 100px;
 	width: 160px;

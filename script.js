@@ -13,13 +13,10 @@ ImageRotator.prototype = {
 	
 	drawFrame: function(index) {
 		if (!index) { index = 0 };
-
 		
 		this.indexNext = Math.ceil(index);
 		this.indexPrev = Math.floor(index);
-
-
-		this.opacity = highMath(Math.abs(index - this.indexPrev));
+		this.opacity = (Math.abs(index - this.indexPrev));
 
 		var imagesLength = this.images.length;
 

@@ -12,7 +12,7 @@ var x = 0,
 var momentum = 0,
 	minMomentum = 0.001;
 //Factors
-var speed = -0.2,
+var speed = -0.1,
 	factorFriction = 0.92,
 	friction = 0,
 	factorResize = 0.8;
@@ -21,7 +21,7 @@ var buttonRight = document.getElementById('rotateRight'),
 	buttonLeft = document.getElementById('rotateLeft'),
 	manualTime = 1000,
 	time = 0,
-	manualPath = 90,
+	manualPath = 180,
 	manualToggle = 0;
 //For calculating speed in 10 frames and smooth moving
 var txArray = new Array(),
@@ -29,9 +29,7 @@ var txArray = new Array(),
 	sumTx = 0,
 	sumTime = 0,
 	framesHistory = 10;
-
-
-	var ttx = 0;
+var ttx = 0;
 
 
 var divFrameNumber = document.getElementById('frameNumber');
@@ -41,15 +39,9 @@ function getRightSpeed() {
 	friction = 0;
 	frictionPerFrame = Math.pow(factorFriction, 60/1000)
 	msForEnd = Math.log(minMomentum/Math.abs(momentum)) / Math.log(frictionPerFrame);
-	// msForEnd = Math.floor(msForEnd);
-	ttx = bx + /* msForEnd * */momentum / (1 - frictionPerFrame);
-	console.log('msfe', msForEnd);
-
-	ttx = Math.round(ttx * speed /10) / speed *10;
-	console.log('ttx', ttx * speed);
-
-	friction = 1 - /* msForEnd * */momentum / (ttx - bx);
-	console.log(friction);
+	ttx = bx + momentum / (1 - frictionPerFrame);
+	ttx = Math.round(ttx * speed) / speed ;
+	friction = 1 - momentum / (ttx - bx);
 };
 
 //Initialize work of script
@@ -63,34 +55,31 @@ function allLoaded() {
 	getWindowSize();
 	animate();
 };
-var tempor = 0;
+
 //4 step
 function animate() {
 	getSumTimeTx();
-	manualRotate();
+	
 
 	var l = timeArray.length;
 	var dt = timeArray[l-1] - timeArray[l-2];
-
+	if (manualToggle) {
+		momentum = 0;
+	}
 	if (momentum) {
 		if (Math.abs(momentum) > minMomentum) {
-			tempor += dt;
 			for(var i = 0; i < dt; i++) {
 				tx += momentum * Math.pow(friction, i)
 			}
 			momentum = momentum * Math.pow(friction, dt);
-			// tx = tx + dt * momentum;
 			bx = tx;
 		} else {
 			momentum = 0;
-			console.log(tempor);
-			tempor = 0;
 		}
 	};
 
 	var index = speed * tx;
-
-
+	manualRotate();
 	myRotator.drawFrame(index);
 	requestAnimationFrame(animate);
 };
@@ -123,9 +112,13 @@ function getWindowSize() {
 
 function manualRotate() {
 	if (manualToggle == 1) {
+		if (toggle == 1) {
+			manualToggle = 0;
+			return;
+		};
 		if (Date.now() - time <= manualTime) {
 			var temp = (Date.now() - time) / manualTime;
-			tx = bx + direction * manualPath * easing(temp);
+			tx = Math.round((bx + direction * manualPath * easing(temp)) * 10) / 10;
 		} else {
 			manualToggle = 0;
 			bx = tx;
@@ -149,30 +142,27 @@ window.addEventListener('resize', function() {
 
 
 canvas.addEventListener('mousedown', function(e) {
-	if (manualToggle == 1) {
-		return;
-	};
 	x = e.clientX;
+	bx = tx;
 	momentum = 0;
 	toggle = 1;
+	manualToggle == 0;
 });
 
 
-document.addEventListener('mousemove', function(e) {
+window.addEventListener('mousemove', function(e) {
 	if (toggle) {
 		tx = bx + e.clientX - x;
 	};
 });
 
 
-document.addEventListener('mouseup', function(e) {
-	if (manualToggle == 1) {
-		return;
-	};
+window.addEventListener('mouseup', function(e) {
+	// if (manualToggle == 1) {
+	// 	return;
+	// };
 	sumTime = timeArray[framesHistory - 1] - timeArray[0];
 	sumTx = txArray[framesHistory - 1] - txArray[0];
-
-
 	momentum = sumTx / sumTime;
 	bx = tx;
 	getRightSpeed();
