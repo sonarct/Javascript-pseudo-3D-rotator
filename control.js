@@ -143,7 +143,6 @@ canvas.addEventListener('mousedown', function(e) {
 window.addEventListener('mousemove', function(e) {
 	if (toggle) {
 		tx = bx + e.clientX - x;
-		//momentum = 0;
 	};
 });
 
