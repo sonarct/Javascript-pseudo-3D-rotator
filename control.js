@@ -19,58 +19,42 @@ var speed = -0.1,
 //Buttons
 var buttonRight = document.getElementById('rotateRight'),
 	buttonLeft = document.getElementById('rotateLeft'),
-	manualTime = 1000,
+	manualTime = 350,
 	time = 0,
-	manualPath = 180,
+	manualPath = 350,
 	manualToggle = 0;
 //For calculating speed in 10 frames and smooth moving
 var txArray = new Array(),
 	timeArray = new Array(),
 	sumTx = 0,
 	sumTime = 0,
-	framesHistory = 10;
-var ttx = 0;
+	framesHistory = 10,
+	ttx = 0,
+	divFrameNumber = document.getElementById('frameNumber');
 
 
-var divFrameNumber = document.getElementById('frameNumber');
 
-
-function getRightSpeed() {
-	friction = 0;
-	frictionPerFrame = Math.pow(factorFriction, 60/1000)
-	msForEnd = Math.log(minMomentum/Math.abs(momentum)) / Math.log(frictionPerFrame);
-	ttx = bx + momentum / (1 - frictionPerFrame);
-	ttx = Math.round(ttx * speed) / speed ;
-	friction = 1 - momentum / (ttx - bx);
-};
-
-//Initialize work of script
 getImagesArray();
 
 
-//Functions
-//2 step
+
 function allLoaded() {
 	myRotator.setFrames(images);
 	getWindowSize();
 	animate();
 };
 
-//4 step
+
 function animate() {
 	getSumTimeTx();
-	
-
 	var l = timeArray.length;
 	var dt = timeArray[l-1] - timeArray[l-2];
-	if (manualToggle) {
-		momentum = 0;
-	}
+
 	if (momentum) {
 		if (Math.abs(momentum) > minMomentum) {
 			for(var i = 0; i < dt; i++) {
 				tx += momentum * Math.pow(friction, i)
-			}
+			};
 			momentum = momentum * Math.pow(friction, dt);
 			bx = tx;
 		} else {
@@ -87,7 +71,7 @@ function animate() {
 
 function easing(k) { return --k * k * k + 1 };
 
-//1 step
+
 function getImagesArray() {
 	for (var i = 0; i < imagesLength; i++) {
 		images[i] = new Image();
@@ -101,7 +85,17 @@ function getImagesArray() {
 	};
 };
 
-//3 step
+
+function getRightSpeed() {
+	friction = 0;
+	frictionPerFrame = Math.pow(factorFriction, 60/1000);
+	ttx = bx + momentum / (1 - frictionPerFrame);
+	ttx = Math.round(ttx * speed) / speed;
+	friction = 1 - momentum / (ttx - bx);
+	friction = Math.min(0.999, Math.max(0, friction));
+};
+
+
 function getWindowSize() {
 	var x = window.innerWidth;
 	var y = window.innerHeight;
@@ -111,19 +105,15 @@ function getWindowSize() {
 
 
 function manualRotate() {
-	if (manualToggle == 1) {
 		if (toggle == 1) {
 			manualToggle = 0;
 			return;
 		};
-		if (Date.now() - time <= manualTime) {
-			var temp = (Date.now() - time) / manualTime;
-			tx = Math.round((bx + direction * manualPath * easing(temp)) * 10) / 10;
-		} else {
-			manualToggle = 0;
-			bx = tx;
-		};
-	};
+
+			if (Date.now() - time > manualTime) {
+				manualToggle = 0;
+				bx = tx;
+			};
 };
 
 
@@ -153,34 +143,34 @@ canvas.addEventListener('mousedown', function(e) {
 window.addEventListener('mousemove', function(e) {
 	if (toggle) {
 		tx = bx + e.clientX - x;
+		//momentum = 0;
 	};
 });
 
 
 window.addEventListener('mouseup', function(e) {
-	// if (manualToggle == 1) {
-	// 	return;
-	// };
+	toggle = 0;
 	sumTime = timeArray[framesHistory - 1] - timeArray[0];
 	sumTx = txArray[framesHistory - 1] - txArray[0];
 	momentum = sumTx / sumTime;
 	bx = tx;
 	getRightSpeed();
-	toggle = 0;
 });
 
-//buttons
+
 buttonRight.addEventListener('click', function() {
+	momentum = manualPath / manualTime;
+	getRightSpeed();
 	manualToggle = 1;
-	direction = 1;
 	time = Date.now();
-	bx = tx;
+	bx = Math.round(tx);
 });
 
 
 buttonLeft.addEventListener('click', function() {
+	momentum = - manualPath / manualTime;
+	getRightSpeed();
 	manualToggle = 1;
-	direction = -1;
 	time = Date.now();
-	bx = tx;
+	bx = Math.round(tx);
 });

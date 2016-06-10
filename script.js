@@ -39,7 +39,8 @@ ImageRotator.prototype = {
 		divFrameNumber.innerHTML = 'prev ' + calculateIndex(this.indexPrev) + 
 		'<br>' + 'next ' + calculateIndex(this.indexNext) + '<br>' + 
 		manualToggle + '<br>' + momentum + '<br>' + '<br>' + this.indexPrev + 
-		'<br>' + this.indexNext + '<br>' + index;
+		'<br>' + this.indexNext + '<br>' + index + '<br>' + '<br>' + 
+		friction + '<br>' + (ttx - bx);
 	},
 
 	resizeFrame: function(width, height) {
