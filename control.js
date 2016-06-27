@@ -39,18 +39,19 @@ function animate() {
 	if (myMomentum.active) {
 		myDrag.offset.x = myMomentum.point.x
 	}
-	var index	= speed    * myDrag.offset.x
-	angle		= speedDiv * myDrag.offset.x
+	var index = speed * myDrag.offset.x
+	angle =  speedDiv * myDrag.offset.x
 	myRotator.drawFrame(index)
 
 	for (var i = 0; i < amount; i++) {
 		function setAngleOffset(myAngle) {
 			return myAngle = myAngle * 2 * Math.PI
 		}
-		drawObject(myDiv.div[i],	setAngleOffset(i / amount), myDivOffset)
+		drawObject(myDiv.div[i],    setAngleOffset(i / amount), myDivOffset)
 		drawObject(myDivTop.div[i], setAngleOffset(i / amount), myDivTopOffset)
 		drawObject(myDivBot.div[i], setAngleOffset(i / amount), myDivBotOffset)
 	}
+	myDrag.offset.x += 3
 	requestAnimationFrame(animate)
 }
 
@@ -157,12 +158,4 @@ myDrag.events.on('end', function() {
 
 myDrag.events.on('drag', function() {
 	myMomentum.stop()
-})
-
-
-buttonRight.addEventListener('click', function() {
-})
-
-
-buttonLeft.addEventListener('click', function() {
 })
