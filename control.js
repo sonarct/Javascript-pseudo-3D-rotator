@@ -1,4 +1,4 @@
-var	radius			
+var	radius			= 0
 ,	angle			= 0
 ,	amount			= 4
 ,	images			= []
@@ -6,17 +6,15 @@ var	radius
 ,	speedDiv		= Math.PI / imagesLength / 10
 ,	speed			= -0.05
 ,	imagesloaded	= 0
-,	toggle			= 0
-,	canvas			= document.getElementById('canvas')
 ,	factorResize	= 0.8
 ,	myRotator		= new ImageRotator
 ,	myDrag			= new Drag(document)
 ,	myMomentum		= new Momentum
-,	myDiv			= new Divificator(amount)
 ,	myDivTop		= new Divificator(amount)
+,	myDiv			= new Divificator(amount)
 ,	myDivBot		= new Divificator(amount)
 ,	myDivTopOffset	= 0
-,	myDivOffset	= 0
+,	myDivOffset		= 0
 ,	myDivBotOffset	= 0
 
 
@@ -30,7 +28,7 @@ getImagesArray()
 
 function allLoaded() {
 	myRotator.setFrames(images)
-	getWindowSize()
+	adaptSize()
 	animate()
 }
 
@@ -41,9 +39,8 @@ function animate() {
 	if (myMomentum.active) {
 		myDrag.offset.x = myMomentum.point.x
 	}
-	var index = speed * myDrag.offset.x
-	angle = speedDiv * myDrag.offset.x
-
+	var index	= speed    * myDrag.offset.x
+	angle		= speedDiv * myDrag.offset.x
 	myRotator.drawFrame(index)
 
 	for (var i = 0; i < amount; i++) {
@@ -72,7 +69,7 @@ function getImagesArray() {
 }
 
 
-function getWindowSize() {
+function adaptSize() {
 	var x = window.innerWidth
 	var y = window.innerHeight
 	var size = Math.min(x,y) * factorResize
@@ -101,16 +98,12 @@ function getWindowSize() {
 
 
 function drawObject(div, angleOffset, diffHeight) {
-
-
 	var x = -radius * Math.cos(angle + angleOffset)
 	,	y = diffHeight
 	,	z = radius * Math.sin(angle + angleOffset)
 
-
 	var coordinates = [[x, y, z, 1]]
-
-	var matrix =[[1.0,	0.0,	0.0,	0.000],
+	,	matrix =[[1.0,	0.0,	0.0,	0.000],
 				 [0.0,	1.0,	0.0,	0.0],
 				 [0.0,	0.0,	1.0,	-0.0009],
 				 [0.0,	0.0,	0.0,	2]]
@@ -151,9 +144,8 @@ function drawObject(div, angleOffset, diffHeight) {
 }
 
 
-//Events
 window.addEventListener('resize', function() {
-	getWindowSize()
+	adaptSize()
 })
 
 
