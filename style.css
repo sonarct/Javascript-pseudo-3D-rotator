@@ -14,34 +14,24 @@
 
 #rotateLeft {
 	position: absolute;
-	top: 1;
-	right: 1;
-	bottom: 1;
-	left: 0;
+	bottom: 27px;
+	left: 48%;
 }
 
 #rotateRight {
 	position: absolute;
-	top: 1;
-	right: 0;
-	bottom: 1;
-	left: 1;
+	bottom: 57px;
+	left: 48%;
 }
 
 body {
 	-webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
 }
 
-#frameNumber {
-	display: none;
+.round {
 	position: absolute;
-	top: 100px;
-	width: 160px;
-	height: 160px;
-	background-color: pink;
-	color: blue;
 }

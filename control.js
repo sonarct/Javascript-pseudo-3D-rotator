@@ -1,175 +1,176 @@
-var images = new Array(),
-	myRotator = new ImageRotator(),
-	imagesLength = 72,
-	imagesloaded = 0,
-	toggle = 0,
-	canvas = document.getElementById('canvas');
-//Coordinates
-var x = 0,
-	tx = 0,
-	bx = 0;
-//Speed
-var momentum = 0,
-	minMomentum = 0.001;
-//Factors
-var speed = -0.1,
-	factorFriction = 0.92,
-	friction = 0,
-	factorResize = 0.8;
-//Buttons
-var buttonRight = document.getElementById('rotateRight'),
-	buttonLeft = document.getElementById('rotateLeft'),
-	manualTime = 350,
-	time = 0,
-	manualPath = 350,
-	manualToggle = 0;
-//For calculating speed in 10 frames and smooth moving
-var txArray = new Array(),
-	timeArray = new Array(),
-	sumTx = 0,
-	sumTime = 0,
-	framesHistory = 10,
-	ttx = 0,
-	divFrameNumber = document.getElementById('frameNumber');
+var	radius			
+,	angle			= 0
+,	amount			= 4
+,	images			= []
+,	imagesLength	= 72
+,	speedDiv		= Math.PI / imagesLength / 10
+,	speed			= -0.05
+,	imagesloaded	= 0
+,	toggle			= 0
+,	canvas			= document.getElementById('canvas')
+,	factorResize	= 0.8
+,	myRotator		= new ImageRotator
+,	myDrag			= new Drag(document)
+,	myMomentum		= new Momentum
+,	myDiv			= new Divificator(amount)
+,	myDivTop		= new Divificator(amount)
+,	myDivBot		= new Divificator(amount)
+,	myDivTopOffset	= 0
+,	myDivOffset	= 0
+,	myDivBotOffset	= 0
 
 
 
-getImagesArray();
+var buttonRight	= document.getElementById('rotateRight')
+,	buttonLeft	= document.getElementById('rotateLeft')
 
+
+getImagesArray()
 
 
 function allLoaded() {
-	myRotator.setFrames(images);
-	getWindowSize();
-	animate();
-};
+	myRotator.setFrames(images)
+	getWindowSize()
+	animate()
+}
 
 
 function animate() {
-	getSumTimeTx();
-	var l = timeArray.length;
-	var dt = timeArray[l-1] - timeArray[l-2];
+	myMomentum.push(myDrag.offset)
+	myMomentum.update()
+	if (myMomentum.active) {
+		myDrag.offset.x = myMomentum.point.x
+	}
+	var index = speed * myDrag.offset.x
+	angle = speedDiv * myDrag.offset.x
 
-	if (momentum) {
-		if (Math.abs(momentum) > minMomentum) {
-			for(var i = 0; i < dt; i++) {
-				tx += momentum * Math.pow(friction, i)
-			};
-			momentum = momentum * Math.pow(friction, dt);
-			bx = tx;
-		} else {
-			momentum = 0;
+	myRotator.drawFrame(index)
+
+	for (var i = 0; i < amount; i++) {
+		function setAngleOffset(myAngle) {
+			return myAngle = myAngle * 2 * Math.PI
 		}
-	};
-
-	var index = speed * tx;
-	manualRotate();
-	myRotator.drawFrame(index);
-	requestAnimationFrame(animate);
-};
-
-
-function easing(k) { return --k * k * k + 1 };
+		drawObject(myDiv.div[i],	setAngleOffset(i / amount), myDivOffset)
+		drawObject(myDivTop.div[i], setAngleOffset(i / amount), myDivTopOffset)
+		drawObject(myDivBot.div[i], setAngleOffset(i / amount), myDivBotOffset)
+	}
+	requestAnimationFrame(animate)
+}
 
 
 function getImagesArray() {
 	for (var i = 0; i < imagesLength; i++) {
-		images[i] = new Image();
-		images[i].src = 'img/' + i + '.jpg';
+		images[i] = new Image()
+		images[i].src = 'img/' + i + '.jpg'
 		images[i].onload = function() {
-			imagesloaded++;
+			imagesloaded++
 			if (imagesloaded == imagesLength) {
-				allLoaded();
-			};
-		};
-	};
-};
-
-
-function getRightSpeed() {
-	friction = 0;
-	frictionPerFrame = Math.pow(factorFriction, 60/1000);
-	ttx = bx + momentum / (1 - frictionPerFrame);
-	ttx = Math.round(ttx * speed) / speed;
-	friction = 1 - momentum / (ttx - bx);
-	friction = Math.min(0.999, Math.max(0, friction));
-};
+				allLoaded()
+			}
+		}
+	}
+}
 
 
 function getWindowSize() {
-	var x = window.innerWidth;
-	var y = window.innerHeight;
-	var size = Math.min(x,y) * factorResize;
-	myRotator.resizeFrame(size,size);
-};
+	var x = window.innerWidth
+	var y = window.innerHeight
+	var size = Math.min(x,y) * factorResize
+	myRotator.resizeFrame(size,size)
+
+	radius = size / 1.5
+	var height = 0.2 * size
+	,	width = 0.25 * size
+	,	margin = (-height) / 2 + 'px 0px 0px ' + (-width) / 2 + 'px'
+	myDivTopOffset = size * 0.4
+	myDivOffset = size * 0
+	myDivBotOffset = size * -0.4
+
+	for (var i = 0; i < amount; i++) {
+		myDiv.div[i].style.height = height + 'px'
+		myDiv.div[i].style.width = width + 'px'
+		myDiv.div[i].style.margin = margin
+		myDivTop.div[i].style.height = height + 'px'
+		myDivTop.div[i].style.width = width + 'px'
+		myDivTop.div[i].style.margin = margin
+		myDivBot.div[i].style.height = height + 'px'
+		myDivBot.div[i].style.width = width + 'px'
+		myDivBot.div[i].style.margin = margin
+	}
+}
 
 
-function manualRotate() {
-		if (toggle == 1) {
-			manualToggle = 0;
-			return;
-		};
-
-			if (Date.now() - time > manualTime) {
-				manualToggle = 0;
-				bx = tx;
-			};
-};
+function drawObject(div, angleOffset, diffHeight) {
 
 
-function getSumTimeTx() {
-	if (timeArray.length > framesHistory) {timeArray.shift()};
-	if (txArray.length > framesHistory) {txArray.shift()};
-	timeArray.push(Date.now());
-	txArray.push(tx);
-};
+	var x = -radius * Math.cos(angle + angleOffset)
+	,	y = diffHeight
+	,	z = radius * Math.sin(angle + angleOffset)
+
+
+	var coordinates = [[x, y, z, 1]]
+
+	var matrix =[[1.0,	0.0,	0.0,	0.000],
+				 [0.0,	1.0,	0.0,	0.0],
+				 [0.0,	0.0,	1.0,	-0.0009],
+				 [0.0,	0.0,	0.0,	2]]
+
+	function MultiplyMatrix(A, B) {
+		var rowsA = A.length, colsA = A[0].length
+		,	rowsB = B.length, colsB = B[0].length
+		,	C = []
+		if (colsA != rowsB) return false
+		for (var i = 0; i < rowsA; i++) C[i] = []
+		for (var k = 0; k < colsB; k++) {
+			for (var i = 0; i < rowsA; i++) {
+				var t = 0
+				for (var j = 0; j < rowsB; j++) {
+					t += A[i][j] * B[j][k]
+				}
+				C[i][k] = t
+			}
+		}
+		return C
+	}
+
+	var result = MultiplyMatrix(coordinates, matrix)
+
+	var perspective = []
+	for (var g = 0; g < 4; g++) {
+		perspective[g] = result[0][g] / result[0][3]
+	}
+
+	var rad = (angle + angleOffset + Math.PI / 2) / 2
+	,	scale = z / radius / 3 + 0.5
+	,	opacity = z / radius / 2 + 0.4
+	,	dX = perspective[0] + window.innerWidth  / 2
+	,	dY = perspective[1] + window.innerHeight / 2
+	//div.style.zIndex = z + 500
+	div.style.transform = 'translate('+ dX +'px,'+ dY +'px) scale('+ scale +')'
+	div.style.opacity = opacity
+}
 
 
 //Events
 window.addEventListener('resize', function() {
-	getWindowSize();
-});
+	getWindowSize()
+})
 
 
-canvas.addEventListener('mousedown', function(e) {
-	x = e.clientX;
-	bx = tx;
-	momentum = 0;
-	toggle = 1;
-	manualToggle == 0;
-});
+myDrag.events.on('end', function() {
+	myMomentum.push(myDrag.offset)
+	myMomentum.start()
+})
 
 
-window.addEventListener('mousemove', function(e) {
-	if (toggle) {
-		tx = bx + e.clientX - x;
-	};
-});
-
-
-window.addEventListener('mouseup', function(e) {
-	toggle = 0;
-	sumTime = timeArray[framesHistory - 1] - timeArray[0];
-	sumTx = txArray[framesHistory - 1] - txArray[0];
-	momentum = sumTx / sumTime;
-	bx = tx;
-	getRightSpeed();
-});
+myDrag.events.on('drag', function() {
+	myMomentum.stop()
+})
 
 
 buttonRight.addEventListener('click', function() {
-	momentum = manualPath / manualTime;
-	getRightSpeed();
-	manualToggle = 1;
-	time = Date.now();
-	bx = Math.round(tx);
-});
+})
 
 
 buttonLeft.addEventListener('click', function() {
-	momentum = - manualPath / manualTime;
-	getRightSpeed();
-	manualToggle = 1;
-	time = Date.now();
-	bx = Math.round(tx);
-});
+})
