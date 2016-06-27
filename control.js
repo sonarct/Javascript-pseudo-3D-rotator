@@ -1,6 +1,25 @@
 var	radius			= 0
 ,	angle			= 0
-,	amount			= 4
+,	points = [{
+		 "beta" : 240,
+		 "y"    : -150
+		}, {
+		 "beta" : 150,
+		 "y"    : 20
+		}, {
+		 "beta" : 310,
+		 "y"    : -200
+		}, {
+		 "beta" : 260,
+		 "y"    : 150
+		}, {
+		 "beta" : 60,
+		 "y"    : 120
+		}, {
+		 "beta" : 310,
+		 "y"    : 180
+	}]
+,	amount			= points.length
 ,	images			= []
 ,	imagesLength	= 72
 ,	speedDiv		= Math.PI / imagesLength / 10
@@ -10,12 +29,10 @@ var	radius			= 0
 ,	myRotator		= new ImageRotator
 ,	myDrag			= new Drag(document)
 ,	myMomentum		= new Momentum
-,	myDivTop		= new Divificator(amount)
-,	myDiv			= new Divificator(amount)
-,	myDivBot		= new Divificator(amount)
-,	myDivTopOffset	= 0
-,	myDivOffset		= 0
-,	myDivBotOffset	= 0
+,	myDiv		= new Divificator(amount)
+,	myDivOffset	= 0
+
+
 
 
 
@@ -45,13 +62,13 @@ function animate() {
 
 	for (var i = 0; i < amount; i++) {
 		function setAngleOffset(myAngle) {
-			return myAngle = myAngle * 2 * Math.PI
+			return myAngle + Math.PI / 2
 		}
-		drawObject(myDiv.div[i],    setAngleOffset(i / amount), myDivOffset)
-		drawObject(myDivTop.div[i], setAngleOffset(i / amount), myDivTopOffset)
-		drawObject(myDivBot.div[i], setAngleOffset(i / amount), myDivBotOffset)
+		myDiv.div[i].textContent = i + ' beta ' + points[i].beta + ' y ' + points[i].y
+		var myOffsetY = radius * 1.5 * points[i].y / 400
+		var myOffsetBeta = points[i].beta * Math.PI / 180
+		drawObject(myDiv.div[i], setAngleOffset(myOffsetBeta), myOffsetY)
 	}
-	myDrag.offset.x += 3
 	requestAnimationFrame(animate)
 }
 
@@ -80,20 +97,12 @@ function adaptSize() {
 	var height = 0.2 * size
 	,	width = 0.25 * size
 	,	margin = (-height) / 2 + 'px 0px 0px ' + (-width) / 2 + 'px'
-	myDivTopOffset = size * 0.4
 	myDivOffset = size * 0
-	myDivBotOffset = size * -0.4
 
 	for (var i = 0; i < amount; i++) {
 		myDiv.div[i].style.height = height + 'px'
 		myDiv.div[i].style.width = width + 'px'
 		myDiv.div[i].style.margin = margin
-		myDivTop.div[i].style.height = height + 'px'
-		myDivTop.div[i].style.width = width + 'px'
-		myDivTop.div[i].style.margin = margin
-		myDivBot.div[i].style.height = height + 'px'
-		myDivBot.div[i].style.width = width + 'px'
-		myDivBot.div[i].style.margin = margin
 	}
 }
 
@@ -136,10 +145,10 @@ function drawObject(div, angleOffset, diffHeight) {
 
 	var rad = (angle + angleOffset + Math.PI / 2) / 2
 	,	scale = z / radius / 3 + 0.5
-	,	opacity = z / radius / 2 + 0.4
+	,	opacity = z / radius / 1.5 + 0.4
 	,	dX = perspective[0] + window.innerWidth  / 2
 	,	dY = perspective[1] + window.innerHeight / 2
-	//div.style.zIndex = z + 500
+	div.style.zIndex = Math.round(z) + 500
 	div.style.transform = 'translate('+ dX +'px,'+ dY +'px) scale('+ scale +')'
 	div.style.opacity = opacity
 }

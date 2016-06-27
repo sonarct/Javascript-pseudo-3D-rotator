@@ -6,7 +6,7 @@ function Divificator(amount) {
 		this.div[j] = document.createElement('div')
 		this.div[j].style.backgroundColor = rainbow(amount, j)
 		this.div[j].className = 'round'
-		this.angleOffset[j] = j / amount;
+		//this.angleOffset[j] = j / amount;
 		document.body.appendChild(this.div[j])
 	}
 
