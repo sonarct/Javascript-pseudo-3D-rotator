@@ -125,7 +125,6 @@ function drawObject(div, angleOffset, diffHeight) {
 	}
 
 	var result = MultiplyMatrix(coordinates, matrix)
-
 	var perspective = []
 	for (var g = 0; g < 4; g++) {
 		perspective[g] = result[0][g] / result[0][3]

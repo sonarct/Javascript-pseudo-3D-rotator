@@ -75,6 +75,46 @@ Momentum.prototype = {
 		this.active = true
 	},
 
+	manual: function(userSpeed) {
+		// if(this.points.length <2) return
+
+		var accel = Math.pow(this.acceleration, 60 / 1000)
+		,   frict = 1 - accel
+
+		var l = this.points.length -1
+		,   a = this.points[0]
+		,   b = this.points[l]
+
+		var dt = b.t - a.t
+
+
+		this.point.x = b.x
+		this.point.y = b.y
+		this.point.z = b.z
+
+		this.speed.x = userSpeed
+		this.speed.y = (b.y - a.y) / dt
+		this.speed.z = (b.z - a.z) / dt
+
+		// this.target.x = this.point.x + this.speed.x / frict
+		// this.target.y = this.point.y + this.speed.y / frict
+		// this.target.z = this.point.z + this.speed.z / frict
+
+		var speed = Math.sqrt(
+			this.speed.x * this.speed.x +
+			this.speed.y * this.speed.y +
+			this.speed.z * this.speed.z)
+
+		this.duration = 1000
+
+		console.log(b.t)
+		this.timeLast  = b.t
+		this.timeStart = b.t
+		this.timeEnd   = b.t + this.duration
+
+		this.active = true
+	},
+
 	move: function() {
 		if(!this.active) return
 
