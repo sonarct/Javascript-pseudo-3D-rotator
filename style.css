@@ -12,18 +12,6 @@
 	margin: auto;
 }
 
-#rotateLeft {
-	position: absolute;
-	bottom: 27px;
-	left: 48%;
-}
-
-#rotateRight {
-	position: absolute;
-	bottom: 57px;
-	left: 48%;
-}
-
 body {
 	-webkit-touch-callout: none;
 	-webkit-user-select: none;
@@ -34,4 +22,5 @@ body {
 
 .round {
 	position: absolute;
+	pointer-events: none;
 }

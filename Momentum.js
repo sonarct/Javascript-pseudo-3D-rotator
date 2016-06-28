@@ -31,9 +31,7 @@ Momentum.prototype = {
 			z: +point.z || 0,
 			t: this.time()
 		})
-		// var oversize = this.points.length - this.pointCount
-		// if(oversize > 0) this.points.splice(0, oversize)
-			
+
 		if(this.points.length > this.pointCount) this.points.shift()
 	},
 

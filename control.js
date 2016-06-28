@@ -24,20 +24,11 @@ var	radius			= 0
 ,	imagesLength	= 72
 ,	speedDiv		= Math.PI / imagesLength / 10
 ,	speed			= -0.05
-,	imagesloaded	= 0
 ,	factorResize	= 0.8
 ,	myRotator		= new ImageRotator
-,	myDrag			= new Drag(document)
+,	myDrag			= new Drag(myRotator.canvas)
 ,	myMomentum		= new Momentum
-,	myDiv		= new Divificator(amount)
-,	myDivOffset	= 0
-
-
-
-
-
-var buttonRight	= document.getElementById('rotateRight')
-,	buttonLeft	= document.getElementById('rotateLeft')
+,	myDiv			= new Divificator(amount)
 
 
 getImagesArray()
@@ -61,19 +52,17 @@ function animate() {
 	myRotator.drawFrame(index)
 
 	for (var i = 0; i < amount; i++) {
-		function setAngleOffset(myAngle) {
-			return myAngle + Math.PI / 2
-		}
 		myDiv.div[i].textContent = i + ' beta ' + points[i].beta + ' y ' + points[i].y
 		var myOffsetY = radius * 1.5 * points[i].y / 400
-		var myOffsetBeta = points[i].beta * Math.PI / 180
-		drawObject(myDiv.div[i], setAngleOffset(myOffsetBeta), myOffsetY)
+		var myOffsetBeta = Math.PI * (points[i].beta / 180 + 1/2)
+		drawObject(myDiv.div[i], myOffsetBeta, myOffsetY)
 	}
 	requestAnimationFrame(animate)
 }
 
 
 function getImagesArray() {
+	var imagesloaded = 0
 	for (var i = 0; i < imagesLength; i++) {
 		images[i] = new Image()
 		images[i].src = 'img/' + i + '.jpg'
@@ -97,7 +86,6 @@ function adaptSize() {
 	var height = 0.2 * size
 	,	width = 0.25 * size
 	,	margin = (-height) / 2 + 'px 0px 0px ' + (-width) / 2 + 'px'
-	myDivOffset = size * 0
 
 	for (var i = 0; i < amount; i++) {
 		myDiv.div[i].style.height = height + 'px'
