@@ -59,6 +59,10 @@ Momentum.prototype = {
 		this.target.x = this.point.x + this.speed.x / frict
 		this.target.y = this.point.y + this.speed.y / frict
 		this.target.z = this.point.z + this.speed.z / frict
+		//Костыль в конструктор, отсекаем все дробные значения у конечной точки
+		this.speed.x = (Math.round(this.target.x / 20) * 20 - this.point.x) * frict
+		this.speed.y = (Math.round(this.target.y / 20) * 20 - this.point.y) * frict
+		this.speed.z = (Math.round(this.target.z / 20) * 20 - this.point.z) * frict
 
 		var speed = Math.sqrt(
 			this.speed.x * this.speed.x +
@@ -75,8 +79,8 @@ Momentum.prototype = {
 		this.active = true
 	},
 
-	manual: function(userSpeed) {
-		// if(this.points.length <2) return
+	manual: function(path) {
+		//if(this.points.length <2) return
 
 		var accel = Math.pow(this.acceleration, 60 / 1000)
 		,   frict = 1 - accel
@@ -92,22 +96,26 @@ Momentum.prototype = {
 		this.point.y = b.y
 		this.point.z = b.z
 
-		this.speed.x = userSpeed
+		this.speed.x = (b.x - a.x) / dt
 		this.speed.y = (b.y - a.y) / dt
 		this.speed.z = (b.z - a.z) / dt
 
-		// this.target.x = this.point.x + this.speed.x / frict
-		// this.target.y = this.point.y + this.speed.y / frict
-		// this.target.z = this.point.z + this.speed.z / frict
+		this.target.x = this.point.x + path
+		this.target.y = this.point.y + this.speed.y / frict
+		this.target.z = this.point.z + this.speed.z / frict
+		//Костыль в конструктор, отсекаем все дробные значения у конечной точки
+		this.speed.x = (Math.round(this.target.x / 20) * 20 - this.point.x) * frict
+		this.speed.y = (Math.round(this.target.y / 20) * 20 - this.point.y) * frict
+		this.speed.z = (Math.round(this.target.z / 20) * 20 - this.point.z) * frict
 
 		var speed = Math.sqrt(
 			this.speed.x * this.speed.x +
 			this.speed.y * this.speed.y +
 			this.speed.z * this.speed.z)
 
-		this.duration = 1000
+		this.duration = Math.log(this.threshold / speed) / Math.log(accel)
 
-		console.log(b.t)
+
 		this.timeLast  = b.t
 		this.timeStart = b.t
 		this.timeEnd   = b.t + this.duration

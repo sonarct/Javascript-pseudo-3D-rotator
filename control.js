@@ -30,6 +30,20 @@ var	radius			= 0
 ,	myMomentum		= new Momentum
 ,	myDiv			= new Divificator(amount)
 
+var buttonRight = document.getElementById('rotateRight')
+,	buttonLeft  = document.getElementById('rotateLeft')
+,	counter = '-'
+
+points.sort(function (a, b) {
+	if (a.beta > b.beta) {
+		return 1;
+	}
+		if (a.beta < b.beta) {
+		return -1;
+	}
+	return 0;
+});
+
 
 getImagesArray()
 
@@ -155,3 +169,56 @@ myDrag.events.on('end', function() {
 myDrag.events.on('drag', function() {
 	myMomentum.stop()
 })
+
+
+function setCounter(number) {
+	return ((number % amount) + amount) % amount
+}
+
+
+buttonRight.addEventListener('click', function() {
+	if (counter == '-') {
+		counter = 0
+		var curr = points[setCounter(counter)].beta
+		myMomentum.manual(-curr * 4)
+		console.log(curr)
+		return
+	}
+	var curr = points[setCounter(counter)].beta
+	,	next = points[setCounter(counter + 1)].beta
+	,	diff = next - curr
+	if (diff == 0) {
+		next = points[setCounter(counter + 2)].beta
+		diff = next - curr
+		counter++
+	}
+	if (diff < 0) {
+		diff = 360 + diff
+	}
+	myMomentum.manual((-diff) * 4)
+	counter++
+});
+
+
+buttonLeft.addEventListener('click', function() {
+	if (counter == '-') {
+		counter = amount - 1
+		var curr = points[setCounter(counter)].beta
+		myMomentum.manual((360 - curr) * 4)
+		console.log(curr)
+		return
+	}
+	var curr = points[setCounter(counter)].beta
+	,	next = points[setCounter(counter - 1)].beta
+	,	diff = next - curr
+	if (diff == 0) {
+		next = points[setCounter(counter - 2)].beta
+		diff = next - curr
+		counter--
+	}
+	if (diff > 0) {
+		diff = diff - 360
+	}
+	myMomentum.manual((-diff) * 4)
+	counter--
+});
