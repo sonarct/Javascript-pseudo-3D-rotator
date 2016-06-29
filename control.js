@@ -32,13 +32,6 @@ var	radius			= 0
 
 var buttonRight = document.getElementById('rotateRight')
 ,	buttonLeft  = document.getElementById('rotateLeft')
-,	next
-,	prev
-,	counter
-,	pos = []
-
-
-
 
 
 getImagesArray()
@@ -168,69 +161,67 @@ myDrag.events.on('drag', function() {
 })
 
 
-function setCounter(number) {
-	return ((number % amount) + amount) % amount
-}
-
-
 buttonRight.addEventListener('click', function() {
-	getNeib()
-	console.log(prev, next)
-	changeDiv(prev)
+getNeib()
+changeDiv(next)
 });
 
 
 buttonLeft.addEventListener('click', function() {
-	getNeib()
-	console.log(prev, next)
-	changeDiv(next)
+getNeib()
+changeDiv(prev)
 
 });
 
-
+var pos = []
 
 function changeDiv(temp) {
 	var divNum = temp
-	if (myMomentum.active) {
-		var d = counter + 2
-		if (d >= pos.length) {
-			d = d - pos.length
-			divNum = pos[d]
-		}
-	}
-
 	var target = myDrag.offset.x - (myDrag.offset.x % 1440) - divNum
-
 	myMomentum.manual(target)
 }
 
 
 function getNeib() {
+	validatePoints()
 	var l = pos.length
 	var curr = myDrag.offset.x % 1440
+	var circle = myDrag.offset.x - (myDrag.offset.x % 1440)
 	if (curr > 0) {
 		curr = 1440 - curr
 	} else {
 		curr = Math.abs(curr)
 	}
-	curr = Math.ceil(curr)
+	curr = Math.round(curr)
+	console.log(curr)
 
-	if (curr >= pos[l - 1] || curr <= pos[0]) {
-		next = pos[0]
-		prev = pos[l - 1]
+	if (curr > pos[l - 1] || curr < pos[0]) {
+		next = circle + pos[0]
+		prev = - circle + pos[l - 1] - 1440
 	} else {
 		for (var j = 0; j < l; j++) {
-			if (curr > pos[j]) {
-				next = pos[j + 1]
-				prev = pos[j]
+			if (curr >= pos[j]) {
+				next = circle + pos[j + 1]
+				prev = circle + pos[j - 1] - 1440
+				if (j + 1 >=  l) {
+					circle = circle - 1440
+					next = circle + pos[0]
+				}
+				if (j - 1 <= -1) {
+					prev = circle + pos[l-j] - 1440
+				}
+				
+
 				counter = j
 			}
 		}
 	}
+	console.log(next, prev)
 }
 
 
 function validatePoints() {
+	pos = []
 	for (var i = 0; i < amount; i++) {
 		pos.push(4 * points[i].beta)
 		if (pos[i] == pos[i - 1]) {
@@ -240,4 +231,3 @@ function validatePoints() {
 }
 
 
-validatePoints()

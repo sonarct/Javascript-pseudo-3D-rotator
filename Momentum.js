@@ -1,6 +1,7 @@
 function Momentum() {
 	this.events = new EventEmitter
 	this.reset()
+	this.points = []
 }
 
 Momentum.prototype = {
@@ -11,7 +12,6 @@ Momentum.prototype = {
 
 	reset: function() {
 		this.active = false
-		this.points = []
 
 		this.speed  = { x: 0, y: 0, z: 0 }
 		this.point  = { x: 0, y: 0, z: 0 }
@@ -80,6 +80,7 @@ Momentum.prototype = {
 	},
 
 	manual: function(target) {
+		if(this.points.length <2) return
 
 		var accel = Math.pow(this.acceleration, 60 / 1000)
 		,   frict = 1 - accel
@@ -88,9 +89,16 @@ Momentum.prototype = {
 		,   a = this.points[0]
 		,   b = this.points[l]
 
+		var dt = b.t - a.t
+
+
 		this.point.x = b.x
 		this.point.y = b.y
 		this.point.z = b.z
+
+		this.speed.x = (b.x - a.x) / dt
+		this.speed.y = (b.y - a.y) / dt
+		this.speed.z = (b.z - a.z) / dt
 
 		this.target.x = target
 		this.target.y = target
