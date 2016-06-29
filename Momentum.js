@@ -79,8 +79,7 @@ Momentum.prototype = {
 		this.active = true
 	},
 
-	manual: function(path) {
-		//if(this.points.length <2) return
+	manual: function(target) {
 
 		var accel = Math.pow(this.acceleration, 60 / 1000)
 		,   frict = 1 - accel
@@ -89,20 +88,13 @@ Momentum.prototype = {
 		,   a = this.points[0]
 		,   b = this.points[l]
 
-		var dt = b.t - a.t
-
-
 		this.point.x = b.x
 		this.point.y = b.y
 		this.point.z = b.z
 
-		this.speed.x = (b.x - a.x) / dt
-		this.speed.y = (b.y - a.y) / dt
-		this.speed.z = (b.z - a.z) / dt
-
-		this.target.x = this.point.x + path
-		this.target.y = this.point.y + this.speed.y / frict
-		this.target.z = this.point.z + this.speed.z / frict
+		this.target.x = target
+		this.target.y = target
+		this.target.z = target
 		//Костыль в конструктор, отсекаем все дробные значения у конечной точки
 		this.speed.x = (Math.round(this.target.x / 20) * 20 - this.point.x) * frict
 		this.speed.y = (Math.round(this.target.y / 20) * 20 - this.point.y) * frict

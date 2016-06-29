@@ -1,23 +1,23 @@
 var	radius			= 0
 ,	angle			= 0
 ,	points = [{
-		 "beta" : 240,
-		 "y"    : -150
+			"beta" : 60,
+			"y"    : 120
 		}, {
-		 "beta" : 150,
-		 "y"    : 20
+			"beta" : 150,
+			"y"    : 20
 		}, {
-		 "beta" : 310,
-		 "y"    : -200
+			"beta" : 240,
+			"y"    : -150
 		}, {
-		 "beta" : 260,
-		 "y"    : 150
+			"beta" : 260,
+			"y"    : 150
 		}, {
-		 "beta" : 60,
-		 "y"    : 120
+			"beta" : 310,
+			"y"    : -200
 		}, {
-		 "beta" : 310,
-		 "y"    : 180
+			"beta" : 310,
+			"y"    : 180
 	}]
 ,	amount			= points.length
 ,	images			= []
@@ -32,17 +32,13 @@ var	radius			= 0
 
 var buttonRight = document.getElementById('rotateRight')
 ,	buttonLeft  = document.getElementById('rotateLeft')
-,	counter = '-'
+,	next
+,	prev
+,	counter
+,	pos = []
 
-points.sort(function (a, b) {
-	if (a.beta > b.beta) {
-		return 1;
-	}
-		if (a.beta < b.beta) {
-		return -1;
-	}
-	return 0;
-});
+
+
 
 
 getImagesArray()
@@ -64,6 +60,7 @@ function animate() {
 	var index = speed * myDrag.offset.x
 	angle =  speedDiv * myDrag.offset.x
 	myRotator.drawFrame(index)
+	document.title = myDrag.offset.x
 
 	for (var i = 0; i < amount; i++) {
 		myDiv.div[i].textContent = i + ' beta ' + points[i].beta + ' y ' + points[i].y
@@ -177,48 +174,70 @@ function setCounter(number) {
 
 
 buttonRight.addEventListener('click', function() {
-	if (counter == '-') {
-		counter = 0
-		var curr = points[setCounter(counter)].beta
-		myMomentum.manual(-curr * 4)
-		console.log(curr)
-		return
-	}
-	var curr = points[setCounter(counter)].beta
-	,	next = points[setCounter(counter + 1)].beta
-	,	diff = next - curr
-	if (diff == 0) {
-		next = points[setCounter(counter + 2)].beta
-		diff = next - curr
-		counter++
-	}
-	if (diff < 0) {
-		diff = 360 + diff
-	}
-	myMomentum.manual((-diff) * 4)
-	counter++
+	getNeib()
+	console.log(prev, next)
+	changeDiv(prev)
 });
 
 
 buttonLeft.addEventListener('click', function() {
-	if (counter == '-') {
-		counter = amount - 1
-		var curr = points[setCounter(counter)].beta
-		myMomentum.manual((360 - curr) * 4)
-		console.log(curr)
-		return
-	}
-	var curr = points[setCounter(counter)].beta
-	,	next = points[setCounter(counter - 1)].beta
-	,	diff = next - curr
-	if (diff == 0) {
-		next = points[setCounter(counter - 2)].beta
-		diff = next - curr
-		counter--
-	}
-	if (diff > 0) {
-		diff = diff - 360
-	}
-	myMomentum.manual((-diff) * 4)
-	counter--
+	getNeib()
+	console.log(prev, next)
+	changeDiv(next)
+
 });
+
+
+
+function changeDiv(temp) {
+	var divNum = temp
+	if (myMomentum.active) {
+		var d = counter + 2
+		if (d >= pos.length) {
+			d = d - pos.length
+			divNum = pos[d]
+		}
+	}
+
+	var target = myDrag.offset.x - (myDrag.offset.x % 1440) - divNum
+
+	myMomentum.manual(target)
+}
+
+
+function getNeib() {
+	var l = pos.length
+	var curr = myDrag.offset.x % 1440
+	if (curr > 0) {
+		curr = 1440 - curr
+	} else {
+		curr = Math.abs(curr)
+	}
+	curr = Math.ceil(curr)
+
+	if (curr >= pos[l - 1] || curr <= pos[0]) {
+		next = pos[0]
+		prev = pos[l - 1]
+	} else {
+		for (var j = 0; j < l; j++) {
+			if (curr > pos[j]) {
+				next = pos[j + 1]
+				prev = pos[j]
+				counter = j
+			}
+		}
+	}
+}
+
+
+function validatePoints() {
+	for (var i = 0; i < amount; i++) {
+		pos.push(4 * points[i].beta)
+		if (pos[i] == pos[i - 1]) {
+			pos.splice([i - 1], 1)
+		}
+	}
+}
+
+
+validatePoints()
