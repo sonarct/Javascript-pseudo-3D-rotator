@@ -33,6 +33,8 @@ var	radius			= 0
 var buttonRight = document.getElementById('rotateRight')
 ,	buttonLeft  = document.getElementById('rotateLeft')
 
+	myDrag.offset.x = -144000
+
 
 getImagesArray()
 
@@ -163,57 +165,68 @@ myDrag.events.on('drag', function() {
 
 buttonRight.addEventListener('click', function() {
 getNeib()
-changeDiv(next)
+changeDiv(prev)
 });
 
 
 buttonLeft.addEventListener('click', function() {
 getNeib()
-changeDiv(prev)
+changeDiv(next)
 
 });
 
 var pos = []
 
 function changeDiv(temp) {
-	var divNum = temp
-	var target = myDrag.offset.x - (myDrag.offset.x % 1440) - divNum
+	var target = myDrag.offset.x - (myDrag.offset.x % 1440) - temp
+	if (myDrag.offset.x > 0) {
+		target = myDrag.offset.x - (myDrag.offset.x % 1440) - Math.abs(temp)
+	}
+	console.log('target ' + target)
 	myMomentum.manual(target)
 }
 
+var next
+,	prev
 
 function getNeib() {
 	validatePoints()
 	var l = pos.length
 	var curr = myDrag.offset.x % 1440
-	var circle = myDrag.offset.x - (myDrag.offset.x % 1440)
-	if (curr > 0) {
-		curr = 1440 - curr
-	} else {
-		curr = Math.abs(curr)
-	}
+	curr = Math.abs(curr)
 	curr = Math.round(curr)
-	console.log(curr)
+	console.log('curr ' + curr)
 
-	if (curr > pos[l - 1] || curr < pos[0]) {
-		next = circle + pos[0]
-		prev = - circle + pos[l - 1] - 1440
-	} else {
-		for (var j = 0; j < l; j++) {
-			if (curr >= pos[j]) {
-				next = circle + pos[j + 1]
-				prev = circle + pos[j - 1] - 1440
-				if (j + 1 >=  l) {
-					circle = circle - 1440
-					next = circle + pos[0]
-				}
-				if (j - 1 <= -1) {
-					prev = circle + pos[l-j] - 1440
-				}
-				
+	for (var i = 0; i < l; i++) {
 
-				counter = j
+		if (curr >= pos[i]) {
+			next = pos[i + 1]
+
+			if (i == l - 1) {
+				next = pos[0] + 1440
 			}
+
+		} else if (curr < pos[0]) {
+			next = pos[0]
+		}
+	}
+
+
+	for (var i = 0; i < l; i++) {
+
+		if (curr >= pos[i]) {
+			prev = pos[i - 1]
+
+			if (i == l - 1) {
+				prev = pos[i - 1]
+			}
+
+			if (i == 0) {
+				prev = pos[l - 1] - 1440
+			}
+
+		} else if (curr < pos[0]) {
+			prev = pos[l - 1] - 1440
 		}
 	}
 	console.log(next, prev)
