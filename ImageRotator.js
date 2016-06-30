@@ -33,9 +33,6 @@ ImageRotator.prototype = {
 		this.ctx.drawImage(framePrev, 0, 0, this.width, this.height)
 		this.ctx.globalAlpha = this.opacity
 		this.ctx.drawImage(frameNext, 0, 0, this.width, this.height)
-
-		//console.log("index" + index)
-
 	},
 
 	resizeFrame: function(width, height) {

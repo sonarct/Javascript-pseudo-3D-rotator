@@ -59,10 +59,18 @@ Momentum.prototype = {
 		this.target.x = this.point.x + this.speed.x / frict
 		this.target.y = this.point.y + this.speed.y / frict
 		this.target.z = this.point.z + this.speed.z / frict
+
 		//Костыль в конструктор, отсекаем все дробные значения у конечной точки
-		this.speed.x = (Math.round(this.target.x / 20) * 20 - this.point.x) * frict
-		this.speed.y = (Math.round(this.target.y / 20) * 20 - this.point.y) * frict
-		this.speed.z = (Math.round(this.target.z / 20) * 20 - this.point.z) * frict
+		var R = -1 / speedX
+
+		this.target.x = Math.round(this.target.x / R) * R
+		this.target.y = Math.round(this.target.y / R) * R
+		this.target.z = Math.round(this.target.z / R) * R
+
+
+		this.speed.x = (this.target.x - this.point.x) * frict
+		this.speed.y = (this.target.y - this.point.y) * frict
+		this.speed.z = (this.target.z - this.point.z) * frict
 
 		var speed = Math.sqrt(
 			this.speed.x * this.speed.x +
@@ -91,7 +99,6 @@ Momentum.prototype = {
 
 		var dt = b.t - a.t
 
-
 		this.point.x = b.x
 		this.point.y = b.y
 		this.point.z = b.z
@@ -103,10 +110,10 @@ Momentum.prototype = {
 		this.target.x = target
 		this.target.y = target
 		this.target.z = target
-		//Костыль в конструктор, отсекаем все дробные значения у конечной точки
-		this.speed.x = (Math.round(this.target.x / 20) * 20 - this.point.x) * frict
-		this.speed.y = (Math.round(this.target.y / 20) * 20 - this.point.y) * frict
-		this.speed.z = (Math.round(this.target.z / 20) * 20 - this.point.z) * frict
+
+		this.speed.x = (this.target.x - this.point.x) * frict
+		this.speed.y = (this.target.y - this.point.y) * frict
+		this.speed.z = (this.target.z - this.point.z) * frict
 
 		var speed = Math.sqrt(
 			this.speed.x * this.speed.x +

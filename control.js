@@ -1,5 +1,5 @@
 var	radius			= 0
-,	angle			= 0
+,	angle			= 0 //radian
 ,	points = [{
 			"beta" : 60,
 			"y"    : 120
@@ -22,8 +22,8 @@ var	radius			= 0
 ,	amount			= points.length
 ,	images			= []
 ,	imagesLength	= 72
-,	speedDiv		= Math.PI / imagesLength / 10
-,	speed			= -0.05
+,	speedX			= -0.1
+,	speedDiv		= 2 * Math.PI / imagesLength * speedX
 ,	factorResize	= 0.8
 ,	myRotator		= new ImageRotator
 ,	myDrag			= new Drag(myRotator.canvas)
@@ -32,11 +32,16 @@ var	radius			= 0
 
 var buttonRight = document.getElementById('rotateRight')
 ,	buttonLeft  = document.getElementById('rotateLeft')
+,	next
+,	prev
+,	pos = []
+,	mystery = -0.2 / speedX
 
-	myDrag.offset.x = -144000
+myDrag.offset.x = mystery * 360 * 1000
 
 
 getImagesArray()
+validatePoints()
 
 
 function allLoaded() {
@@ -52,9 +57,10 @@ function animate() {
 	if (myMomentum.active) {
 		myDrag.offset.x = myMomentum.point.x
 	}
-	var index = speed * myDrag.offset.x
-	angle =  speedDiv * myDrag.offset.x
+	var index = speedX   * myDrag.offset.x
+		angle = speedDiv * myDrag.offset.x
 	myRotator.drawFrame(index)
+
 	document.title = myDrag.offset.x
 
 	for (var i = 0; i < amount; i++) {
@@ -102,7 +108,7 @@ function adaptSize() {
 
 
 function drawObject(div, angleOffset, diffHeight) {
-	var x = -radius * Math.cos(angle + angleOffset)
+	var x = radius * Math.cos(angle + angleOffset)
 	,	y = diffHeight
 	,	z = radius * Math.sin(angle + angleOffset)
 
@@ -112,26 +118,9 @@ function drawObject(div, angleOffset, diffHeight) {
 				 [0.0,	0.0,	1.0,	-0.0009],
 				 [0.0,	0.0,	0.0,	2]]
 
-	function MultiplyMatrix(A, B) {
-		var rowsA = A.length, colsA = A[0].length
-		,	rowsB = B.length, colsB = B[0].length
-		,	C = []
-		if (colsA != rowsB) return false
-		for (var i = 0; i < rowsA; i++) C[i] = []
-		for (var k = 0; k < colsB; k++) {
-			for (var i = 0; i < rowsA; i++) {
-				var t = 0
-				for (var j = 0; j < rowsB; j++) {
-					t += A[i][j] * B[j][k]
-				}
-				C[i][k] = t
-			}
-		}
-		return C
-	}
+	var result 		= MultiplyMatrix(coordinates, matrix)
+	,	perspective = []
 
-	var result = MultiplyMatrix(coordinates, matrix)
-	var perspective = []
 	for (var g = 0; g < 4; g++) {
 		perspective[g] = result[0][g] / result[0][3]
 	}
@@ -143,6 +132,7 @@ function drawObject(div, angleOffset, diffHeight) {
 	,	dY = perspective[1] + window.innerHeight / 2
 	div.style.zIndex = Math.round(z) + 500
 	div.style.transform = 'translate('+ dX +'px,'+ dY +'px) scale('+ scale +')'
+	div.style.webkitTransform = 'translate('+ dX +'px,'+ dY +'px) scale('+ scale +')'
 	div.style.opacity = opacity
 }
 
@@ -164,53 +154,27 @@ myDrag.events.on('drag', function() {
 
 
 buttonRight.addEventListener('click', function() {
-getNeib()
-changeDiv(prev)
-});
+getPrev()
+})
 
 
 buttonLeft.addEventListener('click', function() {
-getNeib()
-changeDiv(next)
+getNext()
+})
 
-});
-
-var pos = []
 
 function changeDiv(temp) {
-	var target = myDrag.offset.x - (myDrag.offset.x % 1440) - temp
-	if (myDrag.offset.x > 0) {
-		target = myDrag.offset.x - (myDrag.offset.x % 1440) - Math.abs(temp)
-	}
+	var target = myDrag.offset.x - (myDrag.offset.x % (360 * mystery)) + temp * mystery
 	console.log('target ' + target)
 	myMomentum.manual(target)
 }
 
-var next
-,	prev
 
-function getNeib() {
-	validatePoints()
+function getPrev() {
+	var circle = 360
 	var l = pos.length
-	var curr = myDrag.offset.x % 1440
-	curr = Math.abs(curr)
-	curr = Math.round(curr)
-	console.log('curr ' + curr)
-
-	for (var i = 0; i < l; i++) {
-
-		if (curr >= pos[i]) {
-			next = pos[i + 1]
-
-			if (i == l - 1) {
-				next = pos[0] + 1440
-			}
-
-		} else if (curr < pos[0]) {
-			next = pos[0]
-		}
-	}
-
+	var curr = (myDrag.offset.x % (circle * mystery)) / mystery
+	curr = Math.round(Math.abs(curr))
 
 	for (var i = 0; i < l; i++) {
 
@@ -222,21 +186,47 @@ function getNeib() {
 			}
 
 			if (i == 0) {
-				prev = pos[l - 1] - 1440
+				prev = pos[l - 1] - circle
 			}
 
 		} else if (curr < pos[0]) {
-			prev = pos[l - 1] - 1440
+			prev = pos[l - 1] - circle
 		}
 	}
-	console.log(next, prev)
+	console.log('prev ' + prev)
+	console.log('curr ' + curr)
+	changeDiv(prev)
+}
+
+
+function getNext() {
+	var circle = 360
+	var l = pos.length
+	var curr = (myDrag.offset.x % (circle * mystery)) / mystery
+	curr = Math.round(Math.abs(curr))
+
+	for (var i = l - 1; i >= 0; i--) {
+
+		if (curr < pos[i]) {
+			next = pos[i]
+			console.log('case 1')
+
+			if (i == l - 1) {
+				next = pos[0] + circle
+			console.log('case 2')
+			}
+		}
+	}
+	console.log('curr ' + curr)
+	console.log('next ' + next)
+	changeDiv(next)
 }
 
 
 function validatePoints() {
 	pos = []
 	for (var i = 0; i < amount; i++) {
-		pos.push(4 * points[i].beta)
+		pos.push(points[i].beta)
 		if (pos[i] == pos[i - 1]) {
 			pos.splice([i - 1], 1)
 		}
@@ -244,3 +234,20 @@ function validatePoints() {
 }
 
 
+function MultiplyMatrix(A, B) {
+	var rowsA = A.length, colsA = A[0].length
+	,	rowsB = B.length, colsB = B[0].length
+	,	C = []
+	if (colsA != rowsB) return false
+	for (var i = 0; i < rowsA; i++) C[i] = []
+	for (var k = 0; k < colsB; k++) {
+		for (var i = 0; i < rowsA; i++) {
+			var t = 0
+			for (var j = 0; j < rowsB; j++) {
+				t += A[i][j] * B[j][k]
+			}
+			C[i][k] = t
+		}
+	}
+	return C
+}
