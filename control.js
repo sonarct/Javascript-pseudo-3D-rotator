@@ -181,10 +181,6 @@ function getPrev() {
 		if (curr >= pos[i]) {
 			prev = pos[i - 1]
 
-			if (i == l - 1) {
-				prev = pos[i - 1]
-			}
-
 			if (i == 0) {
 				prev = pos[l - 1] - circle
 			}
@@ -193,8 +189,6 @@ function getPrev() {
 			prev = pos[l - 1] - circle
 		}
 	}
-	console.log('prev ' + prev)
-	console.log('curr ' + curr)
 	changeDiv(prev)
 }
 
@@ -207,14 +201,18 @@ function getNext() {
 
 	for (var i = l - 1; i >= 0; i--) {
 
-		if (curr < pos[i]) {
-			next = pos[i]
-			console.log('case 1')
+		if (curr <= pos[i]) {
+			next = pos[i + 1]
 
-			if (i == l - 1) {
-				next = pos[0] + circle
-			console.log('case 2')
+			if (i == 0) {
+				next = pos[0]
 			}
+		// 	if (i == l - 1) {
+		// 		next = pos[0] + circle
+		// 	console.log('case 2')
+		// 	}
+		} else if (curr > pos[l - 1]) {
+			next = pos[0] + circle
 		}
 	}
 	console.log('curr ' + curr)
