@@ -30,9 +30,9 @@ var	radius			= 0
 ,	myMomentum		= new Momentum
 ,	myDiv			= new Divificator(amount)
 
-var buttonRight = document.getElementById('rotateRight')
-,	buttonLeft  = document.getElementById('rotateLeft')
-,	next
+// var buttonRight = document.getElementById('rotateRight')
+// ,	buttonLeft  = document.getElementById('rotateLeft')
+var	next
 ,	prev
 ,	pos = []
 ,	mystery = -0.2 / speedX
@@ -153,14 +153,14 @@ myDrag.events.on('drag', function() {
 })
 
 
-buttonRight.addEventListener('click', function() {
-getPrev()
-})
+// buttonRight.addEventListener('click', function() {
+// getPrev()
+// })
 
 
-buttonLeft.addEventListener('click', function() {
-getNext()
-})
+// buttonLeft.addEventListener('click', function() {
+// getNext()
+// })
 
 
 function changeDiv(temp) {
