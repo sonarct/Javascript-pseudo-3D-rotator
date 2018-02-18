@@ -1,6 +1,14 @@
 # Simple drag'n'rotate widget
-My very first test task for the web-development company
 
-You can try it [here](https://sonarct.github.io/rotator)
+I used a bunch of pre-rendered pictures of the glove. Added them effect of smooth rotation and some flying blocks around.
 
-I've used a bunch of pre-rendered pictures of the glove. Have made its rotation smoothly and added some flying blocks around.
+To run project, please, clone repo. Then
+
+> cd rotator
+> npm i
+> npm build
+> npm start
+
+And check result on [localhost:8080](http://localhost:8080)
+
+Thank you
