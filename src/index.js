@@ -1,3 +1,8 @@
+import ImageRotator from '../lib/ImageRotator';
+import Drag from '../lib/Drag';
+import Momentum from '../lib/Momentum';
+import Divificator from '../lib/Divificator';
+
 var	radius			= 0
 ,	angle			= 0 //radian
 ,	points = [{
@@ -27,7 +32,7 @@ var	radius			= 0
 ,	factorResize	= 0.8
 ,	myRotator		= new ImageRotator
 ,	myDrag			= new Drag(myRotator.canvas)
-,	myMomentum		= new Momentum
+,	myMomentum		= new Momentum(speedX)
 ,	myDiv			= new Divificator(amount)
 
 // var buttonRight = document.getElementById('rotateRight')
@@ -61,7 +66,7 @@ function animate() {
 		angle = speedDiv * myDrag.offset.x
 	myRotator.drawFrame(index)
 
-	document.title = myDrag.offset.x
+	// document.title = myDrag.offset.x
 
 	for (var i = 0; i < amount; i++) {
 		myDiv.div[i].textContent = i + ' beta ' + points[i].beta + ' y ' + points[i].y

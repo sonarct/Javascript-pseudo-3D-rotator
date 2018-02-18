@@ -1,0 +1,26 @@
+{
+	"name": "rotator",
+	"version": "1.0.0",
+	"description": "My very first test task for the web-development company",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"start": "http-server ./public",
+		"build": "webpack"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/sonarct/rotator.git"
+	},
+	"author": "sonarct@gmail.com",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/sonarct/rotator/issues"
+	},
+	"homepage": "https://github.com/sonarct/rotator#readme",
+	"dependencies": {
+		"http-server": "^0.11.1",
+		"save-dev": "^2.0.0",
+		"webpack": "^3.11.0"
+	}
+}
